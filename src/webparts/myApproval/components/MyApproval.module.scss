@@ -1,0 +1,162 @@
+@import '~@fluentui/react/dist/sass/References.scss';
+
+.myApproval {
+  overflow: hidden;
+  padding: 1em;
+  color: "[theme:bodyText, default: #323130]";
+  color: var(--bodyText);
+  &.teams {
+    font-family: $ms-font-family-fallbacks;
+  }
+}
+
+.welcome {
+  text-align: center;
+}
+
+.welcomeImage {
+  width: 100%;
+  max-width: 420px;
+}
+
+.links {
+  a {
+    text-decoration: none;
+    color: "[theme:link, default:#03787c]";
+    color: var(--link); // note: CSS Custom Properties support is limited to modern browsers only
+
+    &:hover {
+      text-decoration: underline;
+      color: "[theme:linkHovered, default: #014446]";
+      color: var(--linkHovered); // note: CSS Custom Properties support is limited to modern browsers only
+    }
+  }
+}
+
+.accordionBody {
+  padding: 1rem 1.25rem;
+}
+.accordionItem {
+  margin-bottom: 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+}
+ 
+.accordionHeader {
+  margin: 0;
+}
+ 
+.accordionButton {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  color: #0d6efd;
+  text-align: left;
+  background-color: #f8f9fa;
+  border: 0;
+  border-radius: 0;
+  transition: all 0.15s ease-in-out;
+ 
+  &:hover {
+    background-color: #e9ecef;
+  }
+ 
+  &.collapsed {
+    color: #212529;
+    background-color: #f8f9fa;
+   
+    &::after {
+      content: '▶';
+      float: right;
+      transition: transform 0.15s ease;
+    }
+  }
+ 
+  &:not(.collapsed) {
+    background-color: #e7f1ff;
+   
+    &::after {
+      content: '▼';
+      float: right;
+      transform: rotate(0deg);
+    }
+  }
+}
+ 
+.accordionCollapse {
+  display: none;
+ 
+  &.show {
+    display: block;
+  }
+}
+ 
+.accordionBody {
+  padding: 1rem 1.25rem;
+}
+ 
+.customCard {
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  padding: 1rem;
+}
+ 
+.documentCommentsHeader {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+.formSelect {
+  width: 206px;
+  padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+}
+.btnOutlineSuccess {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  color: #198754;
+  background-color: transparent;
+  border: 1px solid #198754;
+  border-radius: 0.375rem;
+  cursor: pointer;
+ 
+  &:hover {
+    background-color: #198754;
+    color: white;
+  }
+}
+ 
+.ribbonContent {
+  overflow-x: auto;
+}
+ 
+.commentsTable {
+  width: 100%;
+  border-collapse: collapse;
+ 
+  thead {
+    background-color: #f8f9fa;
+   
+    th {
+      padding: 10px;
+      border: 1px solid #dee2e6;
+      font-weight: 600;
+      text-align: left;
+    }
+  }
+ 
+  tbody {
+    tr {
+      border-bottom: 1px solid #dee2e6;
+     
+      &:hover {
+        background-color: #f8f9fa;
+      }
+    }
+  }
+}

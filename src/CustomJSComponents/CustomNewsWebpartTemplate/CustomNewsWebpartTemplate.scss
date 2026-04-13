@@ -1,0 +1,109 @@
+.imagemani {
+    width: 90%;
+    float: right;
+  
+}
+.imagemani img {
+    width: 100%;
+    height: 100%;
+    border-radius: 0px;
+}
+
+.newhoverzom{transition: transform .2s;}
+.newhoverzom:hover {
+  cursor: pointer;
+  transform: scale(1.03) !important;
+}
+.posnew {
+    padding: 2px 12px !important;
+    border-radius: 4px;
+    background: rgba(0, 135, 81, 0.20) !important;
+    font-weight: 500 !important;
+    color: #008751;
+}
+.color-new svg{vertical-align: top;}
+.customhead svg{vertical-align: text-top; margin-top: 0px;}
+.titleHeading
+{
+    line-height: 34px !important;
+    font-size: 30px !important;
+    font-weight: 800 !important;
+    color: #000 !important;
+    margin: 10px 0;
+}
+.customhead
+{
+    color: #98a6ad;
+    font-weight: 400;
+    font-size: 12px;
+}
+.customdescription
+{
+    line-height: 20px;
+    font-weight: 400;
+    color: #98a6ad;
+    font-size: 14px;
+}
+.eventtextnew svg{    vertical-align: text-bottom !important;
+}
+
+.date-color svg{vertical-align: text-top !important; margin-top: 1px;}
+.annuncementcard p,.annuncementcard span{color:#6c757d;}
+.btnCustomcss
+{clear: both;
+    background-color: var(--ct-btn-active-bg);
+    border-color: var(--ct-btn-active-border-color);
+    color: var(--ct-btn-active-color);
+    padding: 10px;
+    border-radius: 20px;
+    width: fit-content;
+    font-size: 14px;
+    font-weight: 500; cursor: pointer;
+}
+.annuncementcard
+{
+    border-radius: 0px !important;
+    border: none !important;
+    box-shadow: 0 3px 20px #1d26260d;
+}
+.readmore {
+    color: var(--primary-color);
+    font-weight: 400;
+    font-size: 14px;
+}
+.readmore:hover{text-decoration: underline;}
+a
+{
+    text-decoration: unset;
+}
+a:hover
+{
+    text-decoration: unset;
+}
+.dropcss
+{
+    position: absolute;
+    right: 0;
+    border: none;
+    display: block;
+    margin: 0px;
+   
+    box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.16), 0 2px 6px 0 rgba(0, 0, 0, 0.12);
+}
+.dropcssItem
+{
+    color: #323a46;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: center;
+}
+.dropcss a{
+    padding: 9px 15px !important;
+}
+.dropcss a:focus{
+    background-color: #f8f9fa !important;
+}
+@media(max-width:640px){
+    .parah{height: 7em !important;}
+    .heauu{height: auto !important;}
+}

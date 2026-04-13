@@ -1,0 +1,21 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": false,
+    "nodeVersion": "18.20.4",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.12.0"
+    },
+    "version": "1.18.2",
+    "libraryName": "essa-approval",
+    "libraryId": "211fae34-eb64-41e5-beca-1c696d9322fb",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "EssaApproval",
+    "solutionShortDescription": "EssaApproval description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

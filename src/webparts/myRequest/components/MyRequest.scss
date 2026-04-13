@@ -1,0 +1,133 @@
+.inputcss {
+    height: 40px;
+    color: #6c757d;
+    padding: .55rem .9rem !important;
+    font-size: .875rem !important;
+    font-weight: 400 !important;
+  }
+  .topv{vertical-align: top;}
+  #cardCollpase4 .mtable {
+    margin-top: 0px !important;
+  }
+  .mtable td{font-size: 14px; border-bottom: 1px solid #efefef;}
+  #cardCollpase4 .mtable tr {
+    display: table;
+    width: 100%;
+  }
+  
+.mtable th{padding: 3px 10px !important;}
+  #cardCollpase4 .inputcss {
+  
+    font-size: .8rem !important;
+  
+    height: 40px;
+  
+  }
+  
+  .content-page {
+    top: 0px !important;
+  }
+  
+  table td {
+    vertical-align: middle !important;
+  }
+  
+  #cardCollpase4 tr {
+    border-radius: 0px !important; border-bottom: 1px solid #efef;
+  }
+  #cardCollpase4 tr:hover{
+    box-shadow: 0 0 2px #cccccc !important;
+  }
+  #cardCollpase4 .mtable tr td:nth-child:first-child {
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+  }
+  
+  #cardCollpase4 .mtable tr td:nth-child:last-child {
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+  }
+  .modal-title {
+    padding: 0px;
+    margin: 0px;
+    text-align: left;
+  }
+  
+  input.form-control.inputcss {
+    display: block;
+    width: 100%;
+    padding: .55rem .9rem !important;
+    font-size: .875rem !important;
+    font-weight: 400 !important;
+    height: 40px !important;
+    line-height: 1.5;
+    box-shadow: none;
+    color: #6c757d !important;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ededed;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.25rem;
+  }
+  
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropbtn {
+  
+    cursor: pointer;
+  }
+  
+  .dropdown-content {
+    background-color: #fff;
+    box-shadow: 0 2px 4px -2px rgba(0, 0, 0, .16), 0 2px 6px 0 rgba(0, 0, 0, .12);
+    display: none;
+    min-width: 110px;
+    position: absolute;
+    right: 1rem;
+    transform: translateY(0px);
+    padding: 0.5rem;
+  }
+  
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown-content a:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .show {
+    display: block;
+  }
+  
+  .showNews {
+    display: block;
+  }
+  
+  .rounded-circlecss {
+    border-radius: 50% !important;
+    height: 2rem !important;
+    width: 2rem !important;
+  }
+  .nav-pills .nav-link.active, .nav-pills .show>.nav-link{
+    background: var(--primary-color) !important;
+  border-radius: 5px;
+  color: #fff !important;
+  }
+  .page-item{margin: 0px !important;}
+  .table-responsive{overflow-x: hidden;}
+  .DMSMasterContainer{margin-top: 10px;}
+ 
+  @media(max-width:640px){
+    .table-responsive{overflow-x: auto;}
+    .DMSMasterContainer{display: grid; overflow: hidden;}
+    .mtbalenew tbody tr td:nth-child(1),.mtbalenew thead tr th:nth-child(1) { min-width: 60px !important;max-width: 60px !important;}
+  }

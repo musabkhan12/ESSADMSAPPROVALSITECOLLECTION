@@ -1,0 +1,55 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "essa-approval-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/essaApproval/EssaApprovalWebPart.js",
+          "manifest": "./src/webparts/essaApproval/EssaApprovalWebPart.manifest.json"
+        }
+      ]
+    },
+    "horizontal-nav-bar-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/horizontalNavBar/HorizontalNavBarWebPart.js",
+          "manifest": "./src/webparts/horizontalNavBar/HorizontalNavBarWebPart.manifest.json"
+        }
+      ]
+    },
+    "vertical-side-bar-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/verticalSideBar/VerticalSideBarWebPart.js",
+          "manifest": "./src/webparts/verticalSideBar/VerticalSideBarWebPart.manifest.json"
+        }
+      ]
+    },
+    "my-approval-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/myApproval/MyApprovalWebPart.js",
+          "manifest": "./src/webparts/myApproval/MyApprovalWebPart.manifest.json"
+        }
+      ]
+    },
+    "my-request-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/myRequest/MyRequestWebPart.js",
+          "manifest": "./src/webparts/myRequest/MyRequestWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "EssaApprovalWebPartStrings": "lib/webparts/essaApproval/loc/{locale}.js",
+    "HorizontalNavBarWebPartStrings": "lib/webparts/horizontalNavBar/loc/{locale}.js",
+    "VerticalSideBarWebPartStrings": "lib/webparts/verticalSideBar/loc/{locale}.js",
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
+    "MyApprovalWebPartStrings": "lib/webparts/myApproval/loc/{locale}.js",
+    "MyRequestWebPartStrings": "lib/webparts/myRequest/loc/{locale}.js"
+  }
+}
