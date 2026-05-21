@@ -1,0 +1,806 @@
+.myTask {
+  padding: 0px 0px;
+  margin-bottom: 50px;
+
+  h2 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+    font-weight: 600;
+  }
+}
+.navbar {
+  .sidebar-openBa {
+    display: none;
+  }
+}
+.navbar {
+  .search_bar {
+    display: none !important;
+  }
+}
+
+/* 🔷 Tiles Styles */
+.tilesContainer {
+  gap: 0px;
+  display: flex;
+  margin-bottom: 0px;
+  align-items: center;
+  justify-content: start;
+}
+
+.tileCount {
+  background: #fff;
+  border-radius: 1000px;
+  color: #46484a;
+  float: right;
+  font-weight: 500;
+  border: 1px solid #46484a;
+  height: 20px;
+  height: 22px;
+  line-height: 21px;
+  margin-left: 0px;
+  margin-top: 9.7px;
+  padding: 4px 0px;
+  text-align: center;
+  width: 30px;
+  border-radius: 1000px;
+  font-size: 14px;
+  height: 30px;
+}
+.tileCard {
+  float: left;
+  margin-right: 0px;
+  background: white;
+  border-radius: 0px;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 4px solid #ccc;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &.activeTile {
+    border-bottom: 4px solid var(--primary-color);
+    p {
+      color: var(--primary-color);
+    }
+    .tileCount {
+      background: var(--primary-color) !important;
+      color: #fff !important;
+    }
+  }
+}
+.nrefield {
+  &.activeTile {
+    border: 1px solid var(--primary-color);
+  }
+}
+.indexdesign {
+  background: var(--light-circle) !important;
+  border: none;
+  border-radius: 1000px;
+  color: var(--primary-color) !important;
+  float: left;
+  font-size: 16px !important;
+  font-weight: 600;
+  height: 28px !important;
+  line-height: 30px !important;
+  margin-left: 12px;
+  padding: 0 1px !important;
+  text-align: center;
+  width: 28px !important;
+}
+.tileBody {
+  padding: 0rem 1.5rem !important;
+}
+
+.tileRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tileIcon {
+  flex: 0 0 auto;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.all {
+    background-color: #6b5ca5;
+  }
+
+  &.primary {
+    background-color: #0078d4;
+  }
+
+  &.warning {
+    background-color: #ffaa44;
+  }
+
+  &.success {
+    background-color: #107c10;
+  }
+
+  &.create {
+    background-color: #e63946;
+  }
+}
+
+.icon {
+  color: white;
+  font-size: 20px;
+}
+
+.tileContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.tileLabel {
+  margin: 0px 0 0 0;
+  color: #000;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 🔶 Table Styles */
+.mainTableContainer {
+  margin-top: 0px;
+  display: grid;
+}
+
+.tableCard {
+  border-radius: 0px;
+
+  overflow: hidden;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  width: 100%;
+  border: 0 solid #e1e1e1;
+  border-radius: 0px;
+}
+
+.taskTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1000px;
+
+  th,
+  td {
+    padding: 5px 8px;
+    text-align: left;
+    font-size: 14px;
+    border: 1px solid #e1e1e1;
+  }
+
+  th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #000;
+    position: sticky;
+    top: 0;
+    border: 1px solid #ccc;
+  }
+  td {
+    background-color: #ffffff;
+  }
+
+  tr:hover {
+    background-color: #f8f9fa;
+  }
+  tr:nth-child(2n) td {
+    background: #f9f9f9;
+  }
+}
+
+/* 🔹 Status Styles */
+.statusBadge {
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: inline-block;
+  min-width: 100px;
+  text-align: center;
+}
+
+.pendingStatus {
+  background: rgba(0, 135, 81, 0.2) !important;
+  border: 1px solid #efefef !important;
+  border-radius: 30px !important;
+  color: #008751 !important;
+  font-size: 13px !important;
+  padding: 2px 5px !important;
+  width: 100px;
+}
+
+.completedStatus {
+  background-color: #dff6dd;
+  color: #107c10;
+  border-radius: 30px !important;
+  border: 1px solid #107c10;
+}
+
+/* 🔸 Action Icons */
+.actionIcon {
+  cursor: pointer;
+  font-size: 16px;
+  padding: 8px;
+  display: inline-block;
+
+  &:hover {
+    opacity: 0.7;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+  }
+}
+
+.scrollHint {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  font-style: italic;
+}
+
+/* 🔷 Form View Styles */
+.formContainer {
+  
+  display: grid;
+}
+
+.formHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  background: #fff;
+  padding: 12px;
+  border-radius: 5px;
+
+  h3 {
+    font-size: 18px;
+    color: #333;
+    font-weight: 600;
+  }
+}
+
+.backButton {
+  background-color: var(--back-color);
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-top: 0px;
+
+  &:hover {
+    background-color: var(--secondary-color);  color: #fff;
+  }
+}
+
+/* Form Fields Grid */
+.formBody {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #333;
+
+    &:disabled {
+      background-color: #f3f2f1;
+      color: #666;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* Upload + Comment Section */
+.formActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  label {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  input[type="file"] {
+    padding: 6px;
+    font-size: 13px;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 70px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 13px;
+    resize: vertical;
+
+    &:disabled {
+      background-color: #f3f2f1;
+      color: #666;
+    }
+  }
+}
+
+/* Audit History Table */
+.auditHistory {
+  margin-top: 20px;
+
+  h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  table {
+    width: 100%;
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: inline-block;
+    border-radius: 0px;
+
+    td {
+      min-width: 120px;
+      max-width: 120px;
+      padding: 6px 10px;
+      text-align: left;
+      background-color: #fff;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      border-bottom: 1px solid #ccc;
+    }
+
+    th {
+      background: #f3f2f1 !important;
+      font-weight: 600 !important;
+      color: #000;
+      font-size: 14px;
+      padding-left: 10px;
+      min-width: 120px;
+      max-width: 120px;
+      padding: 10px !important;
+      border-bottom: 0px solid #1b6363 !important;
+    }
+    thead {
+      width: 100%;
+      display: inline-block;
+      position: relative;
+      overflow: visible;
+    }
+    tbody {
+      width: 100%;
+      position: relative;
+      display: block;
+      max-height: fit-content;
+      overflow: visible;
+    }
+    tr {
+      display: table;
+      width: 100%;
+    }
+  }
+}
+
+/* Form Buttons */
+.formButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 0px;
+}
+
+.submitButton {
+  background-color: #28a745 !important; // green
+  color: white !important;
+  border: none !important;
+  width: 100px !important;
+  margin-top: 0px !important;
+
+  &:hover {
+    background-color: #218838 !important;
+  }
+}
+
+.cancelButton {
+  background-color: #212529 !important; // dark/black
+  color: white !important;
+  border: none !important;
+  width: 100px !important;
+  margin-top: 0px !important;
+
+  &:hover {
+    background-color: #000000 !important;
+  }
+}
+
+
+.formRow {
+  display: flex;
+  flex-direction: column;
+  background: #f8f9fa;
+  padding: 12px 16px;
+  border-radius: 6px;
+  border: 1px solid #e1e1e1;
+
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #323130;
+    margin-bottom: 6px;
+  }
+
+  span {
+    font-size: 14px;
+    color: #201f1e;
+    font-weight: 500;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tilesContainer {
+    flex-direction: column;
+  }
+
+  .tileCard {
+    min-width: 100%;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.formView {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 0px;
+  margin-bottom: 50px;
+
+  //  Add scroll for wide content
+  overflow-x: hidden;
+  overflow-y: hidden;
+  width: 100%;
+  display: grid;
+}
+
+.formInner {
+  min-width: 100%;
+}
+
+.fileInput {
+  width: 250px;
+  padding: 8px;
+  border: 1px solid #ccc; //  gives border like a normal input
+  border-radius: 6px;
+  background-color: #fff;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: #f2f2f2;
+    cursor: not-allowed;
+  }
+
+  &::-webkit-file-upload-button {
+    background-color: #0078d4; // SharePoint blue
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+
+  &::-webkit-file-upload-button:hover {
+    background-color: #005a9e;
+  }
+}
+
+.inProgressStatus {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+  padding: 4px 8px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+
+
+.uploadedFileSection {
+  margin-bottom: 15px;
+}
+
+.fileDownloadContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.fileName {
+  flex: 1;
+  font-weight: 500;
+  color: #333;
+}
+
+.downloadButton {
+  background: #0078d4;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+
+  &:hover {
+    background: #106ebe;
+  }
+}
+
+.noFileText {
+  color: #666;
+  font-style: italic;
+}
+
+.commentDisplay {
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  min-height: 40px;
+  color: #333;
+}
+// Add these styles to your existing MyTasks.module.scss
+
+.accordionItem {
+  margin-bottom: 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+}
+
+.accordionHeader {
+  margin: 0;
+}
+
+.accordionButton {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  color: #0d6efd;
+  text-align: left;
+  background-color: #f8f9fa;
+  border: 0;
+  border-radius: 0;
+  transition: all 0.15s ease-in-out;
+
+  &:hover {
+    background-color: #e9ecef;
+  }
+
+  &.collapsed {
+    color: #212529;
+    background-color: #f8f9fa;
+
+    &::after {
+      content: "▶";
+      float: right;
+      transition: transform 0.15s ease;
+    }
+  }
+
+  &:not(.collapsed) {
+    background-color: #e7f1ff;
+
+    &::after {
+      content: "▼";
+      float: right;
+      transform: rotate(0deg);
+    }
+  }
+}
+
+.accordionCollapse {
+  display: none;
+
+  &.show {
+    display: block;
+  }
+}
+
+.accordionBody {
+  padding: 1rem 1.25rem;
+}
+
+.customCard {
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  padding: 1rem;
+}
+
+.documentCommentsHeader {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.formSelect {
+  width: 206px;
+  padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+}
+
+.btnOutlineSuccess {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  color: #198754;
+  background-color: transparent;
+  border: 1px solid #198754;
+  border-radius: 0.375rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #198754;
+    color: white;
+  }
+}
+.app-menu {
+  display: none !important;
+}
+.ribbonContent {
+  overflow-x: auto;
+}
+
+.commentsTable {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    background-color: #f8f9fa;
+
+    th {
+      padding: 10px;
+      border: 1px solid #dee2e6;
+      font-weight: 600;
+      text-align: left;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid #dee2e6;
+
+      &:hover {
+        background-color: #f8f9fa;
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .documentCommentsHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .formSelect {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .btnOutlineSuccess {
+    margin-bottom: 0.5rem;
+  }
+}
+
+//priyanshu
+.selectedFilesList {
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.fileItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  margin: 5px 0;
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+}
+
+.removeFileBtn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.removeFileBtn:hover {
+  background: #c82333;
+}
+
+.existingFilesList {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+.search_bar,
+.sidebar-openBa {
+  display: none !important;
+}
+
+.inputError {
+  border: 2px solid #fe0100 !important;
+  background-color: #fee6e6 !important;
+  box-shadow: none !important;
+  border-radius: 4px;
+  padding: 4px;
+}

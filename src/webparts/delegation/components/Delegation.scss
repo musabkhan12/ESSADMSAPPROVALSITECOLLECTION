@@ -1,0 +1,183 @@
+/* Style the card to add padding and a shadow */
+.card {
+    padding: 20px !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 0px;
+}
+
+/* Ensure inputs and selects have consistent padding and border radius */
+.form-control, 
+.form-select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    box-shadow: none;
+    transition: border-color 0.2s ease-in-out;
+}
+
+/* Focused input styling */
+.form-control:focus, 
+.form-select:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Custom button styling for consistency */
+.btn-success {
+    background-color: #1abc9c;
+    border-color: #1abc9c;
+}
+
+.btn-light1 {
+    border: 1px solid #efefef;
+    border-radius: 30px;
+    border-radius: 30px !important;
+    color: #3c3c3c;
+    cursor: auto;
+    font-size: 13px;
+    width: 100px;
+}
+.newse .css-hlgwow div{
+    font-weight: 500;
+    color: #000 !important;
+}
+
+/* Add hover effect to buttons */
+.btn-success:hover,
+.btn-light:hover {
+    opacity: 0.9;
+}
+
+/* Style the form labels to stand out */
+.form-label {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+/* Style the description textarea */
+textarea.form-control {
+    resize: none;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    padding: 10px;
+}
+
+/* Center the form buttons */
+.row.mt-3 .col-12.text-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Add some margin to the buttons */
+.row.mt-3 .col-12.text-center .btn {
+    margin: 0 10px;
+}
+
+/* Optional: Add custom styling for required fields */
+.text-danger {
+    color: #dc3545 !important;
+}
+div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm)
+{
+    background-color: #1abc9c !important;
+}
+
+.scrollbar
+{
+    margin-left: 30px;
+    float: left;
+    height: 500px;
+    background: #F5F5F5;
+    overflow-y: scroll;
+    margin-bottom: 25px;
+}
+
+.force-overflow
+{
+    min-height: 450px;
+}
+
+
+
+/*
+ *  STYLE 5
+ */
+
+ #style-5::-webkit-scrollbar-track
+ {
+     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+     background-color: #F5F5F5;
+ }
+ #style-5 {
+    width: 100% !important;
+    background: #fff !important;
+    height: auto;
+    overflow: auto;
+    margin-left: 0px;
+}
+.imagefe{width: 32px; height: 32px; border-radius: 1000px;}
+ #style-5::-webkit-scrollbar
+ {
+     width: 10px;
+     background-color: #F5F5F5;
+ }
+ 
+ #style-5::-webkit-scrollbar-thumb
+ {
+     background-color: #0ae;
+     
+     background-image: -webkit-gradient(linear, 0 0, 0 100%,
+                        color-stop(.5, rgba(255, 255, 255, .2)),
+                        color-stop(.5, transparent), to(transparent));
+ } 
+ .mtable {
+ width: 100%;
+ position: relative;
+ overflow: hidden;
+ display: inline-block;
+ border-radius: 0px;
+}
+.mtable thead {
+ width: 100%;
+ display: inline-block;
+ position: relative;
+ overflow: visible;
+}  
+.mtable tr{border: 0px !important; width: 100% !important; display: table !important;}
+.mtable th {
+ background:#f2f3f5 !important;
+ font-weight: 500 !important;
+ color: #000;
+ font-size: 14px;
+ padding-left: 10px;
+ min-width: 110px;
+ max-width: 110px; border: 0px !important;
+ padding: 10px !important;
+ border-bottom: 1px solid #efefef !important;
+}
+.mtable tbody {
+ width: 100%;
+ position: relative;
+ display: block;
+ max-height: 3007px;
+ overflow: auto;
+}
+.mtable td {
+ min-width: 110px;
+ max-width: 110px;
+ padding: 6px 10px;
+ text-align: left;
+ background-color: #fff;
+ overflow: hidden; font-size: 14px; color: #3c3c3c;
+ text-overflow: ellipsis;
+ white-space: nowrap;border: 0px !important;
+ border-bottom: 1px solid #e1e1e1 !important;
+}
+.table-responsive{display: grid;}
+.css-hlgwow{padding: 2px 14px !important;
+    box-sizing: border-box;
+    margin: -7px !important;}
+.btn-light1{padding:7px 12px !important;}
+.newse{padding: 0px !important; margin: 0px !important; border: 0px solid #ccc !important; height: 36px !important;}

@@ -1,0 +1,21 @@
+.page-title
+{
+    font-size: 20px;
+}
+.breadcrumb-item+.breadcrumb-item:before {
+    color: #6c757d !important;
+    content: "" !important;
+    font-size: 0.875rem;
+    float: left;
+    padding-right: var(--bs-breadcrumb-item-padding-x);
+}
+.font-20
+{
+    font-size: 20px;
+}
+.breadcrumb-item a
+{
+        font-size: 0.875rem;
+        color: #6c757d !important;
+        text-decoration: none;
+    }

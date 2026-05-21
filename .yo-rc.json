@@ -1,0 +1,18 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": false,
+    "nodeVersion": "18.19.0",
+    "sdksVersions": {},
+    "version": "1.18.2",
+    "libraryName": "essa-approval",
+    "libraryId": "211fae34-eb64-41e5-beca-1c696d9322fb",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "EssaApproval",
+    "solutionShortDescription": "EssaApproval description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

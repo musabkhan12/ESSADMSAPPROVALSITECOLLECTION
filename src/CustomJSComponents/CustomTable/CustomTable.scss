@@ -1,0 +1,275 @@
+/* styles.css */
+
+/* Table container styles */
+.table-responsive {
+    overflow-x: auto;
+  }
+  
+  /* Basic table styling */
+  .mtable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table-centered {
+    text-align: center;
+  }
+ 
+  
+  .table-borderless {
+    border: none;
+  }
+  
+  // table th, table td {
+  //   padding: 6px 10px;
+  //   border-bottom: 1px solid #ddd;
+ 
+  // }
+  
+  table th {
+    background: #f2f3f5!important;
+    font-weight: 500 !important;
+    color: #000 !important;
+    font-size: 14px;
+    padding-left: 10px;
+    padding:10px 10px !important;
+    border-bottom: 0px solid #1b6363 !important;
+    // background-color: #f4f4f4;
+    // font-weight: bold;
+  }
+  
+  table td {
+    vertical-align: top;
+    font-size: 14px;    padding:6px 10px !important;
+  }
+  
+  /* Pagination styles */
+  .pagination-rounded {
+    border-radius: 50px;
+  }
+  
+  .page-item {
+    margin: 0 2px;
+  }
+  
+  .page-link {
+    border-radius: 50px;
+     }
+  
+  .page-item.active .page-link {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
+  .page-item .page-link {
+    color: #323a46;
+  }
+  /* Container for pagination */
+.pagination-container {
+  display: flex;
+  justify-content: right;
+  margin-top: 50px;
+}
+
+/* Pagination list */
+.pagination {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+/* Pagination items */
+.page-item {
+  margin: 0 5px;
+}
+
+/* Pagination links */
+.page-link {
+  display: block;
+  // padding: 10px 15px;
+  text-decoration: none;
+  color: #323a46;
+  border: unset;
+
+
+}
+
+/* Active page */
+.page-item.active .page-link {
+  background-color: var(--primary-color);
+  color: white;
+  border: 1px solid var(--primary-color);
+  border-radius: 30px !important;
+}
+
+/* Hover effect */
+.page-link:hover {
+  background-color: #f3f7f9;
+  color: #323a46;
+  border: none;
+}
+
+/* Disabled state (optional) */
+.page-item.disabled .page-link {
+  border: none;
+  cursor: not-allowed;
+}
+/* Responsive pagination */
+@media (max-width: 600px) {
+  .pagination {
+      font-size: 14px;
+  }
+  .page-link {
+      padding: 8px 12px;
+  }
+}
+.page-link {
+  display: block;
+
+  text-decoration: none;
+  color: #fff;
+  border: none;
+
+}
+
+.page-item.active .page-link {
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 30px !important;
+}
+
+.page-link:hover {
+  background: #f3f7f9;
+  color: #323a46;
+  border: none;
+  border-radius: 50% !important;
+  text-decoration: none;
+}
+///////
+/// 
+.page-item {
+  margin: 0 5px;
+}
+
+.page-link {
+  text-decoration: none;
+ 
+  display: block;
+  cursor: pointer;
+}
+
+// .page-item.active .page-link {
+//   font-weight: bold;
+//   color: #495057;
+//   background-color: #e9ecef;
+//   border-color: #dee2e6;
+// }
+
+.page-item.disabled .page-link {
+  color: #6c757d;
+  pointer-events: none;
+  background: transparent;
+  border: none;
+}
+.pagination-rounded .page-link {
+  border-radius: 50% !important;
+  margin: 0 3px !important;
+  border: none;
+  color: #323a46;
+}
+/* Target even rows */
+tbody tr:nth-child(even) {
+  background-color: #f2f2f2; /* Light gray */
+  border-radius: 10px;
+}
+
+/* Target odd rows */
+tbody tr:nth-child(odd) {
+  background-color: #ffffff; /* White */
+}
+.cardCss
+{
+  box-shadow: 0 3px 20px #1d26260d;
+    border: none;
+    border-radius: 20px !important;
+}
+.page-item .page-link
+{
+  font-size: 0.875rem;
+}
+.mtable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 16px;
+  text-align: left;
+  border: none !important;
+
+  th, td {
+    padding: 12px 15px;
+   
+    white-space: nowrap; /* Prevents text from wrapping */
+    overflow: hidden; /* Hides overflow content */
+    text-overflow: ellipsis; /* Adds ellipsis for overflowing text */
+    max-width: 150px; /* Adjust this to control the width before truncation */
+   
+
+  }
+ 
+  th {
+    background-color: #007bff;
+    color: white;
+    text-transform: capitalize !important;
+    border: none !important;
+  }
+
+  tbody tr:nth-of-type(even) {
+    background-color: #fff;
+  }
+
+  tbody tr:hover {
+    background-color: #fff;
+  }
+
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+
+    .pagination {
+      list-style: none;
+      display: flex;
+      padding-left: 0;
+
+      .page-item {
+        margin: 0 5px;
+
+        &.active .page-link {
+          background-color: #007bff;
+          color: white;
+          border-color: #007bff;
+        }
+
+        &.disabled .page-link {
+          cursor: not-allowed;
+          pointer-events: none;
+        }
+
+        .page-link {
+          color: #007bff;
+          text-decoration: none;
+          padding: 5px 10px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          transition: background-color 0.2s;
+
+          &:hover {
+            background-color: #f1f1f1;
+          }
+        }
+      }
+    }
+  }
+}

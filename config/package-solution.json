@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "essa-approval-client-side-solution",
+    "id": "211fae34-eb64-41e5-beca-1c696d9322fb",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.18.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "EssaApproval description"
+      },
+      "longDescription": {
+        "default": "EssaApproval description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "essa-approval Feature",
+        "description": "The feature that activates elements of the essa-approval solution.",
+        "id": "88d90724-f111-4580-b13b-172a53b6f0fc",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/essa-approval.sppkg"
+  }
+}

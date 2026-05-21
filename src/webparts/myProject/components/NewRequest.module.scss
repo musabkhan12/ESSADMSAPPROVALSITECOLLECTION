@@ -1,0 +1,822 @@
+@font-face {
+  font-family: 'Segoe MDL2 Assets';
+  src: url('https://static2.sharepointonline.com/files/fabric/assets/icons/segoe-mdl2-assets.woff2') format('woff2'),
+    url('https://static2.sharepointonline.com/files/fabric/assets/icons/segoe-mdl2-assets.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.newRequest {
+  // max-width: 500px;
+  // margin: 20px auto;
+  // padding: 20px;
+  // background: #fff;
+  // border-radius: 12px;
+  // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, .1);
+  /* margin: 20px auto; */
+  max-width: 1000px !important;
+  /* width: 70%; */
+
+  h2 {
+    margin-bottom: 16px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .ms-TextField {
+    margin-bottom: 16px;
+  }
+
+  .submitButton {
+    margin-top: 12px;
+    width: 100%;
+  }
+}
+
+/* NewRequest.module.scss */
+.newRequest {
+  padding: 20px;
+  max-width: 100% !important;
+  display: grid;
+}
+.selectContainer {
+  position: relative;
+}
+
+.customSelect {
+width: 100%;
+}
+.newRequest h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0px;
+  display: flex;
+
+  margin-bottom: 15px !important;
+}
+
+.newRequest h3 {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0px;
+
+  margin-bottom: 15px !important;
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  font-weight: bold;
+  background-color: #f3f3f3;
+  padding: 8px;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 8px;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr; // two equal columns
+  gap: 20px; // spacing between columns
+  margin-bottom: 15px;
+}
+.formRow input[type=text]{
+  padding: 6px 5px;
+}
+
+.ms-TextField-fieldGroup {
+  border: 1px solid #efefef !important;
+  padding: 6px 10px !important;
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+
+.tableWrapper {
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.table {
+  width: max-content;
+  border-collapse: collapse;
+}
+
+// th,
+// td {
+//   padding: 8px;
+//   text-align: left;
+//   vertical-align: top;
+//   min-width: 200px; // Adjust per column
+//   max-width: 200px;
+// }
+/* Target all table cells */
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  vertical-align: top;
+  min-width: 200px;
+  max-width: 200px;
+}
+
+/* Specific adjustment for Seq. No (6th Column) */
+th:nth-child(6),
+td:nth-child(6) {
+  min-width: 80px;
+  /* Reduced from 200px */
+  max-width: 80px;
+}
+
+/* Specific adjustment for Doc. No (7th Column) */
+/* We add the 120px saved from Seq. No to the base 200px */
+th:nth-child(7),
+td:nth-child(7) {
+  min-width: 320px;
+  /* Increased from 200px */
+  max-width: 320px;
+}
+
+.ms-Button--default {
+  margin-top: 0;
+  padding: 8px 0 !important;
+  width: 70px !important;
+  margin-left: 10px;
+}
+
+button {
+  min-width: auto;
+}
+
+th {
+  background-color: #f3f2f1;
+  font-weight: 600;
+  border-bottom: 1px solid #ccc;
+}
+
+td {
+  border-bottom: 1px solid #eee;
+}
+
+.customAlert {
+  background-color: #fff4e5;
+  color: #a15c00;
+  border: 1px solid #ffc107;
+  padding: 10px 16px;
+  margin-bottom: 12px;
+  border-radius: 4px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.selectContainer {
+  width: 100%;
+}
+
+.selectLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgb(50, 49, 48);
+  margin-bottom: 4px;
+  display: block;
+}
+
+// Ensure React Select matches Fluent UI styling
+:global {
+
+  .css-13cymwt-control,
+  .css-t3ipsp-control {
+    min-height: 32px;
+    border-color: rgb(96, 94, 92);
+    border-radius: 2px;
+  }
+
+  .css-13cymwt-control:hover,
+  .css-t3ipsp-control:hover {
+    border-color: rgb(50, 49, 48);
+  }
+
+  .css-1dimb5e-singleValue {
+    color: rgb(32, 31, 30);
+  }
+
+  .css-1u9des2-indicatorSeparator {
+    background-color: rgb(96, 94, 92);
+  }
+}
+
+.tableHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.addButton {
+  background: #0078d4;
+  color: white;
+  border-radius: 50%;
+}
+
+.deleteButton {
+  color: red;
+  margin-top: 0px;
+  background: transparent !important;
+}
+
+.deleteButton:hover {
+  background: transparent !important;
+}
+
+.buttonRow {
+  margin-top: 16px;
+  margin-bottom: 30px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: end;
+}
+
+.submitButton {
+  background-color: #28a745 !important; // green
+  color: white !important;
+  border: none !important;
+  width: 100px !important;
+  margin-top: 0px !important;
+
+  &:hover {
+    background-color: #218838 !important;
+  }
+}
+
+.cancelButton {
+  background-color: #212529 !important; // dark/black
+  color: white !important;
+  border: none !important;
+  width: 100px !important;
+  margin-top: 0px !important;
+
+  &:hover {
+    background-color: #000000 !important;
+  }
+}
+
+
+
+// Popup Styles
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popupContainer {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  max-width: 90%;
+  animation: popupAppear 0.2s ease-out;
+}
+
+.popupHeader {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e1e1e1;
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #323130;
+  }
+}
+
+.popupBody {
+  padding: 20px;
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #605e5c;
+  }
+}
+
+.popupFooter {
+  padding: 16px 20px;
+  border-top: 1px solid #e1e1e1;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.popupYesButton {
+  min-width: 80px;
+}
+
+.popupNoButton {
+  min-width: 80px;
+}
+
+.popupOkButton {
+  min-width: 80px;
+}
+
+@keyframes popupAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+// Popup Styles
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popupContainer {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  max-width: 90%;
+  animation: popupAppear 0.2s ease-out;
+}
+
+.popupHeader {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e1e1e1;
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #323130;
+  }
+}
+
+.popupBody {
+  padding: 20px;
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #605e5c;
+  }
+}
+
+.popupFooter {
+  padding: 16px 20px;
+  border-top: 1px solid #e1e1e1;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.popupYesButton {
+  min-width: 80px;
+}
+
+.popupNoButton {
+  min-width: 80px;
+}
+
+.popupOkButton {
+  min-width: 80px;
+}
+
+@keyframes popupAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Enhanced Validation Error Styles with Red Fill
+.validationError {
+  border: 2px solid #d13438 !important;
+  border-radius: 2px;
+  background-color: #fef6f6 !important;
+
+  // For Fluent UI TextField
+  .ms-TextField-fieldGroup {
+    border-color: #d13438 !important;
+    background-color: #fef6f6 !important;
+  }
+
+  // For Fluent UI Dropdown
+  .ms-Dropdown-title {
+    border-color: #d13438 !important;
+    background-color: #fef6f6 !important;
+  }
+
+  // For React Select
+  &.react-select-error {
+    .react-select__control {
+      border-color: #d13438 !important;
+      background-color: #fef6f6 !important;
+      box-shadow: 0 0 0 1px #d13438;
+    }
+  }
+
+  // Hover states
+  &:hover {
+    border-color: #a4262c !important;
+    background-color: #fde7e9 !important;
+  }
+}
+
+// Specific styles for different component types
+.textFieldError {
+  .ms-TextField-fieldGroup {
+    border: 2px solid #d13438 !important;
+    background-color: #fef6f6 !important;
+
+    &:hover {
+      border-color: #a4262c !important;
+      background-color: #fde7e9 !important;
+    }
+
+    &:focus,
+    &:focus-within {
+      border-color: #d13438 !important;
+      background-color: #fef6f6 !important;
+    }
+  }
+}
+
+.dropdownError {
+  .ms-Dropdown-title {
+    border: 2px solid #d13438 !important;
+    background-color: #fef6f6 !important;
+
+    &:hover {
+      border-color: #a4262c !important;
+      background-color: #fde7e9 !important;
+    }
+  }
+}
+
+.datePickerError {
+  .ms-TextField-fieldGroup {
+    border: 2px solid #d13438 !important;
+    background-color: #fef6f6 !important;
+
+    &:hover {
+      border-color: #a4262c !important;
+      background-color: #fde7e9 !important;
+    }
+  }
+}
+
+.errorMessage {
+  color: #d13438;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+  font-weight: 400;
+}
+
+// Error icon for visual indication
+.errorIcon {
+  color: #d13438;
+  margin-right: 4px;
+  font-size: 12px;
+}
+
+
+// Success and Error Popup Styles
+.successPopup {
+  border-top: 4px solid #107c10;
+}
+
+.errorPopup {
+  border-top: 4px solid #d13438;
+}
+
+.successHeader {
+  h3 {
+    color: #107c10 !important;
+  }
+}
+
+.errorHeader {
+  h3 {
+    color: #d13438 !important;
+  }
+}
+
+// Keep all your existing popup styles below
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popupContainer {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  max-width: 90%;
+  animation: popupAppear 0.2s ease-out;
+}
+
+.popupHeader {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e1e1e1;
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #323130;
+  }
+}
+
+.popupBody {
+  padding: 20px;
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #605e5c;
+  }
+}
+
+.popupFooter {
+  padding: 16px 20px;
+  border-top: 1px solid #e1e1e1;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.popupYesButton {
+  min-width: 80px;
+}
+
+.popupNoButton {
+  min-width: 80px;
+}
+
+.popupOkButton {
+  min-width: 80px;
+}
+
+@keyframes popupAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.wrapText {
+  white-space: normal !important;
+  /* wrap enable */
+}
+
+.inputError input,
+.inputError textarea,
+.inputError .ms-TextField-fieldGroup,
+.inputError .ms-Dropdown-title,
+.inputError .ms-Dropdown-dropdown,
+.inputError .react-select__control {
+  border: 2px solid #fe0100 !important;
+  background-color: #fee6e6 !important;
+  box-shadow: none !important;
+  border-radius: 4px !important;
+}
+
+/* inside selected text */
+.inputError .react-select__value-container,
+.inputError .react-select__single-value,
+.inputError .react-select__placeholder {
+  background-color: #fee6e6 !important;
+}
+
+/* remove extra border */
+.inputError {
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}   
+.inputError :global(.ms-TextField-fieldGroup) {
+  border: 2px solid #fe0100 !important;
+  background-color: #fee6e6 !important;
+}
+
+.inputError :global(.ms-TextField-field) {
+  background-color: #fee6e6 !important;
+}
+
+/* Table React Select */
+td .inputError .react-select__control {
+  border: 2px solid #fe0100 !important;
+  background-color: #fee6e6 !important;
+  min-height: 36px !important;
+  box-shadow: none !important;
+}
+
+/* Table placeholder/text */
+td .inputError .react-select__placeholder,
+td .inputError .react-select__single-value,
+td .inputError .react-select__value-container {
+  background-color: #fee6e6 !important;
+}
+
+/* Table DatePicker */
+td .inputError .ms-TextField-fieldGroup,
+td .inputError .ms-DatePicker-textField {
+  border: 2px solid #fe0100 !important;
+  background-color: #fee6e6 !important;
+  border-radius: 4px !important;
+}
+
+/* remove weird line */
+td .inputError {
+  border: none !important;
+  padding: 0 !important;
+}
+
+.inputError :global(.ms-TextField-fieldGroup) {
+  border: 2px solid #fe0100 !important;
+  background-color: #fee6e6 !important;
+}
+
+.inputError :global(.ms-TextField-field) {
+  background-color: #fee6e6 !important;
+}
+
+/* ===== Validation Fix for Deliverables Table ===== */
+
+td .inputError .react-select__control {
+  border: 2px solid #fe0100 !important;
+  background-color: #fee6e6 !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+  min-height: 36px !important;
+}
+
+td .inputError .react-select__value-container,
+td .inputError .react-select__single-value,
+td .inputError .react-select__placeholder {
+  background-color: #fee6e6 !important;
+}
+
+td .inputError .ms-TextField-fieldGroup,
+td .inputError .ms-DatePicker-textField {
+  border: 2px solid #fe0100 !important;
+  background-color: #fee6e6 !important;
+  border-radius: 4px !important;
+}
+
+td .inputError {
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.projectTypeError {
+  width: 100%;
+
+  :global(.ms-Dropdown) {
+    width: 100% !important;
+    border: 2px solid #fe0100 !important;
+    border-radius: 6px !important;
+    background-color: #fee6e6 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  :global(.ms-Dropdown-title) {
+    border: none !important;
+    background-color: transparent !important;
+    min-height: 36px !important;
+    line-height: 36px !important;
+    padding-right: 36px !important;
+  }
+
+  :global(.ms-Dropdown-caretDownWrapper) {
+    background-color: #fee6e6 !important;
+  }
+}
+
+.tableDropdownError {
+  width: 100%;
+
+  :global(.ms-Dropdown) {
+    width: 100% !important;
+    border: 2px solid #fe0100 !important;
+    border-radius: 6px !important;
+    background-color: #fee6e6 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  :global(.ms-Dropdown-title) {
+    border: none !important;
+    background-color: transparent !important;
+    min-height: 36px !important;
+    line-height: 36px !important;
+    padding-right: 34px !important;
+  }
+
+  :global(.ms-Dropdown-caretDownWrapper) {
+    background-color: #fee6e6 !important;
+  }
+}
+
+/* ===== Deliverables Table Due Date Error ===== */
+.tableDateError :global(.ms-TextField-fieldGroup) {
+  border: 2px solid #fe0100 !important;
+  background-color: #fee6e6 !important;
+  border-radius: 4px !important;
+}
+
+.tableDateError :global(.ms-TextField-field) {
+  background-color: #fee6e6 !important;
+}
+
+/* ===== Deliverables Table Assigned To Error ===== */
+.tableSelectError :global(.react-select__control) {
+  border: 2px solid #fe0100 !important;
+  background-color: #fee6e6 !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+  min-height: 36px !important;
+}
+
+.tableSelectError :global(.react-select__value-container),
+.tableSelectError :global(.react-select__single-value),
+.tableSelectError :global(.react-select__placeholder) {
+  background-color: #fee6e6 !important;
+}
+
+.saveDraftButton {
+  margin-right: 10px;
+  background-color: #6c757d !important;
+  color: white !important;
+ 
+  &:hover {
+    background-color: #5a6268 !important;
+  }
+}

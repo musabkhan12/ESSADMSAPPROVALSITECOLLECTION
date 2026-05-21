@@ -1,0 +1,100 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "essa-approval-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/essaApproval/EssaApprovalWebPart.js",
+          "manifest": "./src/webparts/essaApproval/EssaApprovalWebPart.manifest.json"
+        }
+      ]
+    },
+    "horizontal-nav-bar-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/horizontalNavBar/HorizontalNavBarWebPart.js",
+          "manifest": "./src/webparts/horizontalNavBar/HorizontalNavBarWebPart.manifest.json"
+        }
+      ]
+    },
+    "vertical-side-bar-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/verticalSideBar/VerticalSideBarWebPart.js",
+          "manifest": "./src/webparts/verticalSideBar/VerticalSideBarWebPart.manifest.json"
+        }
+      ]
+    },
+    "my-approval-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/myApproval/MyApprovalWebPart.js",
+          "manifest": "./src/webparts/myApproval/MyApprovalWebPart.manifest.json"
+        }
+      ]
+    },
+    "my-request-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/myRequest/MyRequestWebPart.js",
+          "manifest": "./src/webparts/myRequest/MyRequestWebPart.manifest.json"
+        }
+      ]
+    },
+    "my-project-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/myProject/MyProjectWebPart.js",
+          "manifest": "./src/webparts/myProject/MyProjectWebPart.manifest.json"
+        }
+      ]
+    },
+    "my-task-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/myTask/MyTaskWebPart.js",
+          "manifest": "./src/webparts/myTask/MyTaskWebPart.manifest.json"
+        }
+      ]
+    },
+    "mdr-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/mdr/MdrWebPart.js",
+          "manifest": "./src/webparts/mdr/MdrWebPart.manifest.json"
+        }
+      ]
+    },
+    "delegation-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/delegation/DelegationWebPart.js",
+          "manifest": "./src/webparts/delegation/DelegationWebPart.manifest.json"
+        }
+      ]
+    },
+    "delegation-master-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/delegationMaster/DelegationMasterWebPart.js",
+          "manifest": "./src/webparts/delegationMaster/DelegationMasterWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "EssaApprovalWebPartStrings": "lib/webparts/essaApproval/loc/{locale}.js",
+    "HorizontalNavBarWebPartStrings": "lib/webparts/horizontalNavBar/loc/{locale}.js",
+    "VerticalSideBarWebPartStrings": "lib/webparts/verticalSideBar/loc/{locale}.js",
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
+    "MyApprovalWebPartStrings": "lib/webparts/myApproval/loc/{locale}.js",
+    "MyRequestWebPartStrings": "lib/webparts/myRequest/loc/{locale}.js",
+    "MyProjectWebPartStrings": "lib/webparts/myProject/loc/{locale}.js",
+    "MyTaskWebPartStrings": "lib/webparts/myTask/loc/{locale}.js",
+    "MdrWebPartStrings": "lib/webparts/mdr/loc/{locale}.js",
+    "DelegationWebPartStrings": "lib/webparts/delegation/loc/{locale}.js",
+    "DelegationMasterWebPartStrings": "lib/webparts/delegationMaster/loc/{locale}.js"
+  }
+}
