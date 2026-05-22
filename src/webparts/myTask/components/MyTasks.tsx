@@ -1983,51 +1983,12 @@ const uploadUrl = `${props.context.pageContext.web.absoluteUrl}/_api/web/GetFold
                           </div>
 
                           {/* Upload & Comment Section */}
+                          <div className="row">
+                              <div className="col-sm-6">
                           <div className={styles.formActions}>
-                            {/* Existing Documents Section - for Pending tasks */}
-                            {selectedTask?.status === "Pending" &&
-                              existingDocuments.length > 0 && (
-                                <>
-                                  <label>Previously Uploaded Documents:</label>
-                                  <div className={styles.existingFilesList}>
-                                    {existingDocuments.map((doc, index) => (
-                                      <p key={index}>
-                                        <a
-                                          href={`https://officeindia.sharepoint.com/sites/ESSA/SitePages/PDFViewer.aspx?docId=${doc.id}`}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                        >
-                                          {doc.name}
-                                        </a>
-                                      </p>
-                                    ))}
-                                  </div>
-                                </>
-                              )}
-
-                            {/* For Completed/In-Progress tasks - show all uploaded files */}
-                            {(selectedTask?.status === "Approved" ||
-                              selectedTask?.status === "In-Progress") &&
-                              existingDocuments.length > 0 && (
-                                <>
-                                  <label>All Uploaded Documents:</label>
-                                  <div className={styles.existingFilesList}>
-                                    {existingDocuments.map((doc, index) => (
-                                      <p key={index}>
-                                        <a
-                                          href={`https://officeindia.sharepoint.com/sites/ESSA/SitePages/PDFViewer.aspx?docId=${doc.id}`}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                        >
-                                          {doc.name}
-                                        </a>
-                                      </p>
-                                    ))}
-                                  </div>
-                                </>
-                              )}
-
+                         
                             {/* Show upload field only for Pending tasks */}
+                        
                             {selectedTask?.status === "Pending" && (
                               <>
                                 <label>Upload Documents*</label>
@@ -2105,7 +2066,7 @@ const uploadUrl = `${props.context.pageContext.web.absoluteUrl}/_api/web/GetFold
                                         className={styles.fileItem}
                                       >
                                         <span>{file.name}</span>
-                                        <button
+                                        <button style={{minWidth:'auto'}}
                                           type="button"
                                           onClick={() => {
                                             const newFiles = [...selectedFiles];
@@ -2126,8 +2087,53 @@ const uploadUrl = `${props.context.pageContext.web.absoluteUrl}/_api/web/GetFold
                               </>
                             )}
 
+                               {/* Existing Documents Section - for Pending tasks */}
+                            {selectedTask?.status === "Pending" &&
+                              existingDocuments.length > 0 && (
+                                <>
+                                  <label>Previously Uploaded Documents:</label>
+                                  <div className={styles.existingFilesList}>
+                                    {existingDocuments.map((doc, index) => (
+                                      <p className="mb-0" key={index}>
+                                        <a className="font-12"
+                                          href={`https://officeindia.sharepoint.com/sites/ESSA/SitePages/PDFViewer.aspx?docId=${doc.id}`}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                        >
+                                          {doc.name}
+                                        </a>
+                                      </p>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+
+                            {/* For Completed/In-Progress tasks - show all uploaded files */}
+                            {(selectedTask?.status === "Approved" ||
+                              selectedTask?.status === "In-Progress") &&
+                              existingDocuments.length > 0 && (
+                                <>
+                                  <label>All Uploaded Documents:</label>
+                                  <div className={styles.existingFilesList}>
+                                    {existingDocuments.map((doc, index) => (
+                                      <p key={index}>
+                                        <a
+                                          href={`https://officeindia.sharepoint.com/sites/ESSA/SitePages/PDFViewer.aspx?docId=${doc.id}`}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                        >
+                                          {doc.name}
+                                        </a>
+                                      </p>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+
+</div></div>
+ <div className="col-sm-6">
                             <label>Comment</label>
-                            <textarea
+                            <textarea className="form-control" rows={2}
                               placeholder="Enter your comment"
                               value={comment}
                               onChange={(e) => setComment(e.target.value)}
@@ -2136,7 +2142,7 @@ const uploadUrl = `${props.context.pageContext.web.absoluteUrl}/_api/web/GetFold
                                 selectedTask?.status === "In-Progress"
                               }
                             />
-                          </div>
+                          </div></div>
 
                           {/* Document Comments Accordion */}
                           {showDocumentComments && (

@@ -471,11 +471,13 @@ td {
     background-color: #fde7e9 !important;
   }
 }
-
+#textField-159 .ms-TextField-fieldGroup{
+  border: 2px solid #d13438 !important;
+}
 // Specific styles for different component types
 .textFieldError {
   .ms-TextField-fieldGroup {
-    border: 2px solid #d13438 !important;
+    // border: 2px solid #d13438 !important;
     background-color: #fef6f6 !important;
 
     &:hover {
@@ -634,8 +636,8 @@ td {
   /* wrap enable */
 }
 
-.inputError input,
-.inputError textarea,
+// .inputError input,
+// .inputError textarea,
 .inputError .ms-TextField-fieldGroup,
 .inputError .ms-Dropdown-title,
 .inputError .ms-Dropdown-dropdown,

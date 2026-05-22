@@ -7188,36 +7188,7 @@ const MyApprovalContext = ({ props }: any) => {
                                                 </select>
                                               </div>
 
-                                              <div className="col-md-4">
-                                                <label className="form-label">
-                                                  <strong>
-                                                    Outgoing status
-                                                  </strong>
-                                                </label>
-                                                <select
-                                                  value={projectOutgoingstatus}
-                                                  onChange={(e) => {
-                                                    setprojectOutgoingstatus(
-                                                      e.target.value,
-                                                    );
-                                                    setFieldErrors((prev) => ({
-                                                      ...prev,
-                                                      outgoingStatus: false,
-                                                    }));
-                                                  }}
-                                                  className={`form-select ${fieldErrors.outgoingStatus ? styles.inputError : ""}`}
-                                                >
-                                                  <option
-                                                    value="Select"
-                                                    disabled
-                                                  >
-                                                    Select
-                                                  </option>
-                                                  <option value="A">A</option>
-                                                  <option value="B">B</option>
-                                                  <option value="C">C</option>
-                                                </select>
-                                              </div>
+                                           
                                             </>
                                           )}
 
@@ -7289,14 +7260,79 @@ const MyApprovalContext = ({ props }: any) => {
                                             </>
                                           )}
 
-                                          {showDocumentComments && (
+                                          
+                                        </div>
+
+                                        
+                                      </div>
+                                    </div>
+                                    
+
+                                    
+                                  )}
+<div className="card card-body">  
+  <div className="row">
+   <div className="col-md-4">
+                                                <label className="form-label">
+                                                  <strong>
+                                                    Outgoing status
+                                                  </strong>
+                                                </label>
+                                                <select
+                                                  value={projectOutgoingstatus}
+                                                  onChange={(e) => {
+                                                    setprojectOutgoingstatus(
+                                                      e.target.value,
+                                                    );
+                                                    setFieldErrors((prev) => ({
+                                                      ...prev,
+                                                      outgoingStatus: false,
+                                                    }));
+                                                  }}
+                                                  className={`form-select ${fieldErrors.outgoingStatus ? styles.inputError : ""}`}
+                                                >
+                                                  <option
+                                                    value="Select"
+                                                    disabled
+                                                  >
+                                                    Select
+                                                  </option>
+                                                  <option value="A">A</option>
+                                                  <option value="B">B</option>
+                                                  <option value="C">C</option>
+                                                </select>
+                                              </div>
+                                          <div className="col-md-8">
+                                            <div className="col-12">
+                                              <label className="form-label">
+                                                <strong>Remarks</strong>
+                                              </label>
+                                              <textarea
+                                                value={projectRemarks}
+                                                onChange={(e) => {
+                                                  setProjectRemarks(
+                                                    e.target.value,
+                                                  );
+                                                  setFieldErrors((prev) => ({
+                                                    ...prev,
+                                                    remarks: false,
+                                                  }));
+                                                }}
+                                                placeholder="Enter your remarks here..."
+                                                rows={4}
+                                                className={`form-control ${fieldErrors.remarks ? styles.textareaError : ""}`}
+                                              />
+                                            </div>
+                                          </div>
+                                          </div>
+                                  {showDocumentComments && (
+
+                                    
                                             <div
                                               className={styles.accordionItem}
                                             >
                                               <h2
-                                                className={
-                                                  styles.accordionHeader
-                                                }
+                                                className="text-dark font-16 fw-bold m-0"
                                               >
                                                 <div
                                                   className={
@@ -7487,32 +7523,9 @@ const MyApprovalContext = ({ props }: any) => {
                                               </div>
                                             </div>
                                           )}
-
-                                          <div className="col-md-4">
-                                            <div className="col-12">
-                                              <label className="form-label">
-                                                <strong>Remarks</strong>
-                                              </label>
-                                              <textarea
-                                                value={projectRemarks}
-                                                onChange={(e) => {
-                                                  setProjectRemarks(
-                                                    e.target.value,
-                                                  );
-                                                  setFieldErrors((prev) => ({
-                                                    ...prev,
-                                                    remarks: false,
-                                                  }));
-                                                }}
-                                                placeholder="Enter your remarks here..."
-                                                rows={4}
-                                                className={`form-control ${fieldErrors.remarks ? styles.textareaError : ""}`}
-                                              />
-                                            </div>
-                                          </div>
                                         </div>
 
-                                        {selectedProjectTask?.ApprovalRole ===
+                                  {selectedProjectTask?.ApprovalRole ===
                                           "Document Controller" &&
                                           projectNeedsFurtherApproval ===
                                             "Yes" && (
@@ -7520,13 +7533,13 @@ const MyApprovalContext = ({ props }: any) => {
                                               <div className="card-body">
                                                 <div className="approval-projectHierarchy mt-4">
                                                   <div className="d-flex justify-content-between align-items-center mb-3">
-                                                    <h5
+                                                    <h4 className="text-dark font-16 fw-bold m-0"
                                                       style={{
                                                         margin: "inherit",
                                                       }}
                                                     >
                                                       Approval Hierarchy
-                                                    </h5>
+                                                    </h4>
                                                     <button
                                                       type="button"
                                                       className="btn btn-primary btn-sm"
@@ -7796,7 +7809,7 @@ const MyApprovalContext = ({ props }: any) => {
                                                                 </select>
                                                               </td>
                                                               <td className="text-center">
-                                                                <button
+                                                                <button style={{minWidth:'auto'}}
                                                                   type="button"
                                                                   className="btn btn-outline-danger btn-sm"
                                                                   onClick={() =>
@@ -8045,9 +8058,6 @@ const MyApprovalContext = ({ props }: any) => {
                                             </div>
                                           </div>
                                         </div>
-                                      </div>
-                                    </div>
-                                  )}
                                 </div>
                               </div>
                             </div>

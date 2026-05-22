@@ -1290,7 +1290,7 @@ const Dashboard = ({ props }: any) => {
                                   </th>
                                   <th>Document Number</th>
                                   <th>Organization</th>
-                                  <th>Action Date Time</th>
+                                  <th  style={{ minWidth: "100px" }}>Action Date Time</th>
                                   <th style={{ minWidth: "100px" }}>
                                     Revision Number
                                   </th>
@@ -1328,7 +1328,7 @@ const Dashboard = ({ props }: any) => {
                                           ?.Organisation || ""}
                                       </td>
 
-                                      <td>
+                                      <td  style={{ minWidth: "100px" }}>
                                         {deliverable.Status !== "Pending" &&
                                         deliverable.Modified
                                           ? new Date(
