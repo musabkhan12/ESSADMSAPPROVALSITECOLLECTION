@@ -974,6 +974,8 @@ const Dashboard = ({ props }: any) => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          height: "100vh",
+           width: "100%",
         }}
       >
         <img

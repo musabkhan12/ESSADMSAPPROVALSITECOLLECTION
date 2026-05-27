@@ -299,8 +299,6 @@ const [Mylistdata, setMylistdata] = useState<any[]>([]);
 //       filepreviewurl = updatedData[0]?.FilePreviewUrl;
 //       setAiSummary(updatedData[0]?.AISummary || "");
 //       console.log(filepreviewurl, "file url")
-
-//       const siteData = await sp.web.lists.getByTitle('MasterSiteURL').items.select("Id", "SiteID").filter(`Title eq '${updatedData[0]?.SiteName}'`)();
 //       console.log("siteData", siteData);
 //       const { web } = await sp.site.openWebById(siteData[0].SiteID);
 
@@ -514,7 +512,7 @@ const getApprovalmasterTasklist = async () => {
       const targetWeb = foundSiteUrl ? Web(foundSiteUrl).using(AssignFrom(sp.web)) : sp.web;
 
       const updatedData: any = await targetWeb.lists.getByTitle("DMSFileApprovalList").items
-        .select("FileUID", "ID", "ApproveAction", "ApprovedLevel", "SiteName", "DocumentLibraryName", "ApprovedLevel", "FilePreviewUrl", "FolderPath", "FileName","AISummary" , "RequestedBy")
+        .select("FileUID", "ID", "ApproveAction", "ApprovedLevel", "SiteName", "DocumentLibraryName", "ApprovedLevel", "FilePreviewUrl", "FolderPath", "FileName","AISummary" , "RequestedBy","Status")
         .filter(`FileUID eq '${FileUID}'`)()
         .catch((error) => console.error("Error fetching data from DMSFileApprovalList:", error));
       
@@ -557,14 +555,14 @@ const getApprovalmasterTasklist = async () => {
 
       const objectForStatus = {
         label: "Status",
-        value: fileItem.ListItemAllFields.Status || ""
+        value: fileItem.ListItemAllFields.Status || updatedData[0]?.Status || "Pending"
       }
       const objectforfilename = {
         label: "File Name",
         value: updatedData[0]?.FileName
       }
       const objectforRequestedby = {
-        label: "Request By",
+        label: "Request By", 
         value: updatedData[0]?.RequestedBy
       }
       const objectForDocumentLibrary = {
@@ -661,14 +659,9 @@ const handleToggleClick = (event: any) => {
   setopenfileon(newState);
   
   if (newState && readablefilepreviewurl) {
-    // Opening - set editable URL
-    const editUrl = readablefilepreviewurl;
-    setEditableUrl(editUrl);
-    setIsEditMode(true);
+    setEditableUrl(readablefilepreviewurl);
   } else {
-    // Closing - clear the URL
     setEditableUrl("");
-    setIsEditMode(false);
   }
 };
   console.log(Mylistdata, "Mylistdata")
@@ -1417,37 +1410,27 @@ const handleToggleClick = (event: any) => {
         flex: "1"  // Takes remaining space
       }}
     >
-     
-<div className="d-flex align-items-center justify-content-end gap-1">
-      <h5 style={{ marginBottom: "10px", margin:'0px' }}>AI Suggestion</h5>
-<div
-  style={{
-    width: "40px",
-    height: "22px",
-    background: openfileon ? "#0d6efd" : "#ddd",
-    borderRadius: "11px",
-    position: "relative",
-    cursor: "pointer"
-  }}
-  onClick={handleToggleClick}
->
-  <div
+     <div className="d-flex align-items-center justify-content-end gap-1">
+  <button
+    type="button"
     style={{
-      width: "18px",
-      height: "18px",
-      background: "#fff",
-      borderRadius: "50%",
-      position: "absolute",
-      top: "2px",
-      left: openfileon ? "20px" : "2px",
-      transition: "left 0.3s ease"
+      padding: "8px 18px",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+      fontWeight: "600",
+      backgroundColor: openfileon ? "#dc3545" : "#0d6efd",
+      color: "white",
+      fontSize: "14px"
     }}
-  />
+    onClick={handleToggleClick}
+  >
+    {openfileon ? "Close Preview" : "Preview"}
+  </button>
 </div>
-</div>
-      <div>
+      {/* <div>
         {aiSummary ? aiSummary : "No AI Summary available."}
-      </div>
+      </div> */}
     </div>
 
 </div>
@@ -1481,32 +1464,34 @@ style={{
 </div>
                     <div id="dynamicDetailsContainer"></div>
                   </div> */}
-                  {openfileon && (
+ {openfileon && (
   <div className="" style={{ backgroundColor: 'white', marginTop: '20px', borderRadius: '5px', padding: '15px' }}>
-    <div style={{display:'flex', gap:'5px', justifyContent:'end', marginBottom:'5px'}}>
+    
+    {/* 1. Full Screen Button - Flex Container  */}
+    <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
       <button
         type="button"
-        style={{
-          padding: "10px 15px",
+        style={isFullScreen ? {
+          padding: "6px 12px",
           border: "none",
           borderRadius: "4px",
           cursor: "pointer",
           fontWeight: "600",
           backgroundColor: "#6c757d",
           color: "white",
-          position: isFullScreen ? "fixed" : "static",
-          top: isFullScreen ? "10px" : "auto",
-          right: isFullScreen ? "10px" : "auto",
-          zIndex: 10000,
-          transition: "background-color 0.3s ease",
-        }}
-        onMouseOver={(e) => {
-          const target = e.target as HTMLButtonElement;
-          target.style.backgroundColor = "#5a6268";
-        }}
-        onMouseOut={(e) => {
-          const target = e.target as HTMLButtonElement;
-          target.style.backgroundColor = "#6c757d";
+          position: "fixed",
+          top: "10px",
+          right: "10px",
+          zIndex: 10000, 
+        } : {
+          padding: "6px 12px",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+          fontWeight: "600",
+          backgroundColor: "#6c757d",
+          color: "white",
+          
         }}
         onClick={() => setIsFullScreen(!isFullScreen)}
       >
@@ -1514,26 +1499,51 @@ style={{
       </button>
     </div>
 
-    {/* <div style={{textAlign:'center'}} className='spinner' id="spinner">
-      <img style={{width:'116px', margin: '0px auto'}} src={require("../assets/ESSAROLLER.gif")} alt="Loading..." />
-      <div style={{color:"black", marginBottom:'10px'}}>Loading Preview File</div>
-    </div> */}
-
+    {/* 2. File Preview Iframe Container */}
+    <div style={{ position: 'relative', overflow: 'hidden' }}>
     <iframe
-      id="filePreview"
-      src={editableUrl || ""}
-      style={{
-        width: isFullScreen ? "100vw" : "100%",
-        height: isFullScreen ? "100vh" : "1200px",
-        border: "none",
-        position: isFullScreen ? "fixed" : "relative",
-        top: isFullScreen ? 0 : "auto",
-        left: isFullScreen ? 0 : "auto",
-        zIndex: isFullScreen ? 9999 : "auto",
-        background: "#fff",
-      }}
-      title="File Preview"
-    />
+        id="filePreview"
+        src={editableUrl || ""}
+        style={{
+          width: isFullScreen ? "100vw" : "100%",
+          height: isFullScreen ? "100vh" : "80vh",
+          border: "none",
+          position: isFullScreen ? "fixed" : "relative",
+          top: isFullScreen ? 0 : "auto",
+          left: isFullScreen ? 0 : "auto",
+          zIndex: isFullScreen ? 9999 : "auto",
+          background: "#fff",
+          display: editableUrl ? "block" : "none",
+          marginTop: "0px", 
+          clipPath: "none", 
+          visibility: "hidden", 
+        }}
+        title="File Preview"
+        onLoad={() => {
+          try {
+            const iframe = document.getElementById("filePreview") as HTMLIFrameElement;
+            const iframeDocument = iframe.contentDocument || iframe.contentWindow?.document;
+            if (iframeDocument) {
+              const style = iframeDocument.createElement("style");
+              style.innerHTML = `
+                [data-testid='close-button'],
+                [aria-label='Close'],
+                .od-ItemContent-closeButton,
+                [data-automationid='closeButton'] {
+                  display: none !important;
+                }
+              `;
+              iframeDocument.head.appendChild(style);
+            }
+            iframe.style.visibility = "visible";
+          } catch (error) {
+            console.error("Error in iframe onLoad:", error);
+            const iframe = document.getElementById("filePreview") as HTMLIFrameElement;
+            if (iframe) iframe.style.visibility = "visible";
+          }
+        }}
+      />
+    </div>
   </div>
 )}
                   {/* {showAISummary && (

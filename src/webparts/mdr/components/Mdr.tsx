@@ -122,12 +122,7 @@ const MDR: React.FC<IMDRProps> = ({ context, siteUrl }) => {
         return creationIdParam ? parseInt(creationIdParam, 10) : null;
       } catch (error) {
         console.error("Error parsing URL:", error);
-         ErrorLogger.logError(
-     spContext,
-    error,
-    "parseURL",
-    "MDRWebPart"
-  );
+        ErrorLogger.logError(spContext, error, "parseURL", "MDRWebPart");
         return null;
       }
     };
@@ -164,12 +159,12 @@ const MDR: React.FC<IMDRProps> = ({ context, siteUrl }) => {
       }
     } catch (error) {
       console.error("Error retrieving project details:", error);
-       await ErrorLogger.logError(
-     spContext,
-    error,
-    "getCreationDetails",
-    "MDRWebPart"
-  );
+      await ErrorLogger.logError(
+        spContext,
+        error,
+        "getCreationDetails",
+        "MDRWebPart",
+      );
       setLoading(false);
     }
   };
@@ -203,12 +198,12 @@ const MDR: React.FC<IMDRProps> = ({ context, siteUrl }) => {
       }
     } catch (error) {
       console.error("Error fetching document link:", error);
-       await ErrorLogger.logError(
-    spContext,
-    error,
-    "getDocumentUrl",
-    "MDRWebPart"
-  );
+      await ErrorLogger.logError(
+        spContext,
+        error,
+        "getDocumentUrl",
+        "MDRWebPart",
+      );
       return { url: "", name: "" };
     }
   };
@@ -380,11 +375,11 @@ const MDR: React.FC<IMDRProps> = ({ context, siteUrl }) => {
                 error,
               );
               await ErrorLogger.logError(
-    spContext,
-    error,
-    `processDeliverable_${item.Id}`,
-    "MDRWebPart"
-  );
+                spContext,
+                error,
+                `processDeliverable_${item.Id}`,
+                "MDRWebPart",
+              );
             }
 
             return processedItem;
@@ -395,14 +390,13 @@ const MDR: React.FC<IMDRProps> = ({ context, siteUrl }) => {
       }
     } catch (error) {
       console.error("Error retrieving deliverables details:", error);
-       await ErrorLogger.logError(
-    spContext,
-    error,
-    "getDeliverablesDetails",
-    "MDRWebPart"
-  );
-    } 
-    finally {
+      await ErrorLogger.logError(
+        spContext,
+        error,
+        "getDeliverablesDetails",
+        "MDRWebPart",
+      );
+    } finally {
       setLoading(false);
     }
   };
@@ -437,12 +431,7 @@ const MDR: React.FC<IMDRProps> = ({ context, siteUrl }) => {
       const date = new Date(dateString);
       return date.toLocaleDateString("en-GB");
     } catch (error) {
-      ErrorLogger.logError(
-     spContext,
-    error,
-    "formatDate",
-    "MDRWebPart"
-  );
+      ErrorLogger.logError(spContext, error, "formatDate", "MDRWebPart");
       return dateString;
     }
   };
@@ -453,11 +442,13 @@ const MDR: React.FC<IMDRProps> = ({ context, siteUrl }) => {
   };
 
   const exportMDRToExcel = () => {
-     try {
-    const table = document.querySelector(`.${styles.newTable}`) as HTMLElement;
-    if (!table) return;
+    try {
+      const table = document.querySelector(
+        `.${styles.newTable}`,
+      ) as HTMLElement;
+      if (!table) return;
 
-    const html = `
+      const html = `
     <html xmlns:o="urn:schemas-microsoft-com:office:office"
           xmlns:x="urn:schemas-microsoft-com:office:excel"
           xmlns="http://www.w3.org/TR/REC-html40">
@@ -472,23 +463,18 @@ const MDR: React.FC<IMDRProps> = ({ context, siteUrl }) => {
       </body>
     </html>`;
 
-    const blob = new Blob([html], { type: "application/vnd.ms-excel" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `MDR_Export_${new Date().toISOString().slice(0, 10)}.xls`;
-    a.click();
-    URL.revokeObjectURL(url);
+      const blob = new Blob([html], { type: "application/vnd.ms-excel" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `MDR_Export_${new Date().toISOString().slice(0, 10)}.xls`;
+      a.click();
+      URL.revokeObjectURL(url);
     } catch (error) {
-    console.error("exportMDRToExcel error:", error);
+      console.error("exportMDRToExcel error:", error);
 
-    ErrorLogger.logError(
-      spContext,
-      error,
-      "exportMDRToExcel",
-      "MDRWebPart"
-    );
-  }
+      ErrorLogger.logError(spContext, error, "exportMDRToExcel", "MDRWebPart");
+    }
   };
 
   function getComputedStyleCSS() {
@@ -507,7 +493,14 @@ const MDR: React.FC<IMDRProps> = ({ context, siteUrl }) => {
 
   if (loading) {
     return (
-      <div id="wrapper" ref={elementRef}>
+      <div
+        id="wrapper"
+        ref={elementRef}
+        style={{
+          background: "#fff",
+          minHeight: "100vh",
+        }}
+      >
         <div className="app-menu" id="myHeader">
           <VerticalSideBar _context={sp} />
         </div>
@@ -522,8 +515,27 @@ const MDR: React.FC<IMDRProps> = ({ context, siteUrl }) => {
           >
             <div className="container-fluid paddb">
               <div className={styles.mdrContainer}>
-                <div className={styles.loading}>
-                  <div className={styles.loadingSpinner}></div>
+                <div
+                  className={styles.loading}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100vh",
+                    zIndex: 9999,
+                    background: "#fff",
+                  }}
+                >
+                  <img
+                    src={require("../../../CustomAsset/birdloader.gif")}
+                    alt="Loading..."
+                    style={{ width: "90px", height: "90px" }}
+                  />
                   Loading MDR data...
                 </div>
               </div>
@@ -554,13 +566,12 @@ const MDR: React.FC<IMDRProps> = ({ context, siteUrl }) => {
               <div className={styles.pageHeader}>
                 <h2>MDR - {projectName || "Project Details"}</h2>
                 <div className={styles.headerActions}>
-                  <button
-                    type="button"
+                  <DefaultButton
+                    text="Export to Excel"
+                    iconProps={{ iconName: "ExcelDocument" }}
                     onClick={exportMDRToExcel}
                     className={styles.btnExport}
-                  >
-                    Export to Excel
-                  </button>
+                  />
                   <DefaultButton
                     text="Back"
                     iconProps={{ iconName: "NavigateBack" }}

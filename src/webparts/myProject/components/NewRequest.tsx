@@ -127,9 +127,20 @@ const NewRequest: React.FC<INewRequestProps> = (props) => {
   const [showSubmitLoader, setShowSubmitLoader] =
     React.useState<boolean>(false);
 
-    const [submitAction, setSubmitAction] = React.useState<"submit" | "draft">("submit");
+  const [submitAction, setSubmitAction] = React.useState<"submit" | "draft">(
+    "submit",
+  );
 
-    const [isDraftMode, setIsDraftMode] = React.useState(false);
+  const [isDraftMode, setIsDraftMode] = React.useState(false);
+
+  // Project Name uniqueness check
+  const [projectNameExists, setProjectNameExists] = React.useState(false);
+  const [isCheckingProjectName, setIsCheckingProjectName] =
+    React.useState(false);
+  // Tracks whether duplicate popup has already been shown for current name
+  const duplicatePopupShownRef = React.useRef(false);
+  // Tracks the project name that was successfully saved — skip duplicate check for this
+  const lastSavedProjectNameRef = React.useRef<string>("");
 
   // Define deliverable item type
   interface DeliverableItem {
@@ -141,6 +152,7 @@ const NewRequest: React.FC<INewRequestProps> = (props) => {
     docNumber: string;
     dueDate: Date | undefined;
     assignedTo: number;
+    CustomID: string;
   }
 
   // this is used for dynamic deleivreables table generation array
@@ -154,127 +166,126 @@ const NewRequest: React.FC<INewRequestProps> = (props) => {
       docNumber: "",
       dueDate: undefined,
       assignedTo: 0,
+      CustomID: "",
     },
   ]);
 
- const validateForm = (actionType?: "submit" | "draft"): boolean => {
+  const validateForm = (actionType?: "submit" | "draft"): boolean => {
     const errors: { [key: string]: boolean } = {};
     let errorMessages: string[] = [];
 
     // Validate Project Information
-   if (actionType === "draft") {
+    if (actionType === "draft") {
+      const draftErrors: { [key: string]: boolean } = {};
 
-  const draftErrors: { [key: string]: boolean } = {};
-
-  if (!projectInfo.projectName.trim()) {
-  draftErrors.projectName = true;
-}
-
-if (!projectInfo.projectType) {
-  draftErrors.projectType = true;
-}
-
-  setFieldErrors(draftErrors);
-
-  if (Object.keys(draftErrors).length > 0) {
-
-    setPopupConfig({
-      type: "validation",
-      title: "Validation Error",
-      message: "Please fill mandatory fields.",
-    });
-
-    setShowPopup(true);
-    setShowSubmitLoader(false);
-
-    return false;
-  }
-
-  return true;
-}
-  // Submit mode - ALL fields mandatory (existing logic)
-  if (!projectInfo.projectName.trim()) {
-    errors.projectName = true;
-    errorMessages.push("Project Name");
-  }
-  if (!projectInfo.clientName.trim()) {
-    errors.clientName = true;
-    errorMessages.push("Client Name");
-  }
-  if (!selectedUser) {
-    errors.preparedBy = true;
-    errorMessages.push("Prepared By");
-  }
-  if (!projectInfo.startDate) {
-    errors.startDate = true;
-    errorMessages.push("Project Start Date");
-  }
-  if (!projectInfo.projectType) {
-    errors.projectType = true;
-    errorMessages.push("Project Type");
-  }
-  if (!projectInfo.overview.trim()) {
-    errors.overview = true;
-    errorMessages.push("Project Overview");
-  }
-  // Validate Deliverables - at least one row must have deliverable selected
-  const hasAtLeastOneDeliverable = deliverables.some(
-    (d) => d.deliverable.trim() !== "",
-  );
-  if (!hasAtLeastOneDeliverable) {
-    errors.minimumDeliverable = true;
-    errorMessages.push("At least one Deliverable");
-  }
-  // Validate each deliverable row - ALL fields mandatory if any field is filled
-  deliverables.forEach((deliverable, index) => {
-    const isLastSingleRow =
-      deliverables.length === 1 &&
-      index === 0 &&
-      !deliverable.deliverable &&
-      !deliverable.area &&
-      !deliverable.organisation &&
-      !deliverable.docType &&
-      !deliverable.dueDate &&
-      !deliverable.assignedTo;
-    const shouldValidateRow = !isLastSingleRow;
-    if (shouldValidateRow) {
-      if (!deliverable.deliverable) {
-        errors[`deliverable_${index}`] = true;
-        errorMessages.push(`Deliverable in row ${index + 1}`);
+      if (!projectInfo.projectName.trim()) {
+        draftErrors.projectName = true;
       }
-      if (!deliverable.area) {
-        errors[`area_${index}`] = true;
-        errorMessages.push(`Area in row ${index + 1}`);
+
+      if (!projectInfo.projectType) {
+        draftErrors.projectType = true;
       }
-      if (!deliverable.organisation) {
-        errors[`organisation_${index}`] = true;
-        errorMessages.push(`Organisation in row ${index + 1}`);
+
+      setFieldErrors(draftErrors);
+
+      if (Object.keys(draftErrors).length > 0) {
+        setPopupConfig({
+          type: "validation",
+          title: "Validation Error",
+          message: "Please fill mandatory fields.",
+        });
+
+        setShowPopup(true);
+        setShowSubmitLoader(false);
+
+        return false;
       }
-      if (!deliverable.docType) {
-        errors[`docType_${index}`] = true;
-        errorMessages.push(`Document Type in row ${index + 1}`);
-      }
-      if (!deliverable.dueDate) {
-        errors[`dueDate_${index}`] = true;
-        errorMessages.push(`Due Date in row ${index + 1}`);
-      }
-      if (!deliverable.assignedTo) {
-        errors[`assignedTo_${index}`] = true;
-        errorMessages.push(`Assigned To in row ${index + 1}`);
-      }
+
+      return true;
     }
-  });
-  setFieldErrors(errors);
-  if (Object.keys(errors).length > 0) {
-    setPopupConfig({
-      type: "validation",
-      title: "Validation Error",
-      message: `Please fill mandatory fields.`,
+    // Submit mode - ALL fields mandatory (existing logic)
+    if (!projectInfo.projectName.trim()) {
+      errors.projectName = true;
+      errorMessages.push("Project Name");
+    }
+    if (!projectInfo.clientName.trim()) {
+      errors.clientName = true;
+      errorMessages.push("Client Name");
+    }
+    if (!selectedUser) {
+      errors.preparedBy = true;
+      errorMessages.push("Prepared By");
+    }
+    if (!projectInfo.startDate) {
+      errors.startDate = true;
+      errorMessages.push("Project Start Date");
+    }
+    if (!projectInfo.projectType) {
+      errors.projectType = true;
+      errorMessages.push("Project Type");
+    }
+    if (!projectInfo.overview.trim()) {
+      errors.overview = true;
+      errorMessages.push("Project Overview");
+    }
+    // Validate Deliverables - at least one row must have deliverable selected
+    const hasAtLeastOneDeliverable = deliverables.some(
+      (d) => d.deliverable.trim() !== "",
+    );
+    if (!hasAtLeastOneDeliverable) {
+      errors.minimumDeliverable = true;
+      errorMessages.push("At least one Deliverable");
+    }
+    // Validate each deliverable row - ALL fields mandatory if any field is filled
+    deliverables.forEach((deliverable, index) => {
+      const isLastSingleRow =
+        deliverables.length === 1 &&
+        index === 0 &&
+        !deliverable.deliverable &&
+        !deliverable.area &&
+        !deliverable.organisation &&
+        !deliverable.docType &&
+        !deliverable.dueDate &&
+        !deliverable.assignedTo;
+      const shouldValidateRow = !isLastSingleRow;
+      if (shouldValidateRow) {
+        if (!deliverable.deliverable) {
+          errors[`deliverable_${index}`] = true;
+          errorMessages.push(`Deliverable in row ${index + 1}`);
+        }
+        if (!deliverable.area) {
+          errors[`area_${index}`] = true;
+          errorMessages.push(`Area in row ${index + 1}`);
+        }
+        if (!deliverable.organisation) {
+          errors[`organisation_${index}`] = true;
+          errorMessages.push(`Organisation in row ${index + 1}`);
+        }
+        if (!deliverable.docType) {
+          errors[`docType_${index}`] = true;
+          errorMessages.push(`Document Type in row ${index + 1}`);
+        }
+        if (!deliverable.dueDate) {
+          errors[`dueDate_${index}`] = true;
+          errorMessages.push(`Due Date in row ${index + 1}`);
+        }
+        if (!deliverable.assignedTo) {
+          errors[`assignedTo_${index}`] = true;
+          errorMessages.push(`Assigned To in row ${index + 1}`);
+        }
+      }
     });
-    setShowPopup(true);
-    setShowSubmitLoader(false);
-    return false;
-  }
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      setPopupConfig({
+        type: "validation",
+        title: "Validation Error",
+        message: `Please fill mandatory fields.`,
+      });
+      setShowPopup(true);
+      setShowSubmitLoader(false);
+      return false;
+    }
 
     return true;
   };
@@ -674,6 +685,7 @@ if (!projectInfo.projectType) {
         docNumber: d.docNumber || "",
         dueDate: d.dueDate ? new Date(d.dueDate) : undefined,
         assignedTo: d.assignedToId || 0,
+        CustomID: d.CustomID || "", // <--- ADD THIS - preserve existing ID
       }));
       // Set deliverables after master data is loaded
       setTimeout(() => {
@@ -681,6 +693,7 @@ if (!projectInfo.projectType) {
       }, 500);
     }
   };
+
   const handleUpdateExisting = async (action: "submit" | "draft") => {
     try {
       setShowSubmitLoader(true);
@@ -711,6 +724,8 @@ if (!projectInfo.projectType) {
         const assignedUserEmail =
           userOptions.find((u) => u.value === row.assignedTo)?.email || "";
         return {
+          CustomID:
+            row.CustomID || generateCustomID(projectInfo.projectName, []),
           rowIndex: index + 1,
           deliverableId: selectedDeliverable?.ID || null,
           deliverableName: row.deliverable,
@@ -895,6 +910,7 @@ if (!projectInfo.projectType) {
               docNumber: "",
               dueDate: undefined,
               assignedTo: 0,
+              CustomID: "",
             };
 
             // Generate sequence and doc number for each item
@@ -977,7 +993,26 @@ if (!projectInfo.projectType) {
         );
 
         const normalized = normalizeSequenceNumbers(mapped);
-        setDeliverables(normalized);
+        const withCustomIDs: DeliverableItem[] = [];
+
+        normalized.forEach((item) => {
+          // Already generated IDs
+          const existingIDs = withCustomIDs
+            .map((r) => r.CustomID)
+            .filter((id) => id !== "");
+
+          // Generate next ID
+          const customId = projectInfo.projectName
+            ? generateCustomID(projectInfo.projectName, existingIDs)
+            : "";
+
+          withCustomIDs.push({
+            ...item,
+            CustomID: customId,
+          });
+        });
+
+        setDeliverables(withCustomIDs);
       } else {
         setDeliverables([
           {
@@ -989,6 +1024,7 @@ if (!projectInfo.projectType) {
             docNumber: "",
             dueDate: undefined,
             assignedTo: 0,
+            CustomID: "",
           },
         ]);
       }
@@ -1010,6 +1046,7 @@ if (!projectInfo.projectType) {
           docNumber: "",
           dueDate: undefined,
           assignedTo: 0,
+          CustomID: "",
         },
       ]);
     }
@@ -1029,102 +1066,110 @@ if (!projectInfo.projectType) {
 
   // Updated handleSubmit function
   const handleSubmit = (action: "submit" | "draft") => {
+    // Block if project name already exists
+    if (projectNameExists) {
+      setPopupConfig({
+        type: "validation",
+        title: "Duplicate Project Name",
+        message: `❌ Project name "${projectInfo.projectName}" already exists. Please use a different name.`,
+      });
+      setShowPopup(true);
+      return;
+    }
     // Check if editing existing draft or new request
-  const isEditingDraft = props.initialData && props.initialData.projectId;
-  
-if (isEditingDraft) {
+    const isEditingDraft = props.initialData && props.initialData.projectId;
 
-  setSubmitAction(action);
-  setShowSubmitLoader(true);
+    if (isEditingDraft) {
+      setSubmitAction(action);
+      setShowSubmitLoader(true);
 
-  if (!validateForm(action)) {
-    return;
-  }
+      if (!validateForm(action)) {
+        return;
+      }
 
-  setPopupConfig({
-    type: "confirmation",
-    title:
-      action === "submit"
-        ? "Confirm Submission"
-        : "Confirm Save as Draft",
-    message:
-      action === "submit"
-        ? "Are you sure you want to submit this request?"
-        : "Are you sure you want to save this request as draft?",
-  });
+      setPopupConfig({
+        type: "confirmation",
+        title:
+          action === "submit" ? "Confirm Submission" : "Confirm Save as Draft",
+        message:
+          action === "submit"
+            ? "Are you sure you want to submit this request?"
+            : "Are you sure you want to save this request as draft?",
+      });
 
-  setShowPopup(true);
-  setShowSubmitLoader(false);
+      setShowPopup(true);
+      setShowSubmitLoader(false);
 
-  return;
-} else {
-    // New request flow
-  setSubmitAction(action);
-  setShowSubmitLoader(true);
+      return;
+    } else {
+      // New request flow
+      setSubmitAction(action);
+      setShowSubmitLoader(true);
 
- if (!validateForm(action)) {
-    return;
-  }
+      if (!validateForm(action)) {
+        return;
+      }
 
-  setPopupConfig({
-    type: "confirmation",
-    title: action === "submit" ? "Confirm Submission" : "Confirm Save as Draft",
-    message: action === "submit" 
-      ? "Are you sure you want to submit this request?" 
-      : "Are you sure you want to save this request as draft?",
-  });
-  setShowPopup(true);
-  setShowSubmitLoader(false);
-   }
-};
+      setPopupConfig({
+        type: "confirmation",
+        title:
+          action === "submit" ? "Confirm Submission" : "Confirm Save as Draft",
+        message:
+          action === "submit"
+            ? "Are you sure you want to submit this request?"
+            : "Are you sure you want to save this request as draft?",
+      });
+      setShowPopup(true);
+      setShowSubmitLoader(false);
+    }
+  };
 
-//    const handleSuccessOk = () => {
-//   setShowPopup(false);
-//   if (isDraftMode) {
-//   if (props.onCancel) props.onCancel();
-// } else{
-//      window.location.reload();
-//   }
-// };
+  //    const handleSuccessOk = () => {
+  //   setShowPopup(false);
+  //   if (isDraftMode) {
+  //   if (props.onCancel) props.onCancel();
+  // } else{
+  //      window.location.reload();
+  //   }
+  // };
 
-const handleSuccessOk = () => {
+  const handleSuccessOk = () => {
+    setShowPopup(false);
 
-  setShowPopup(false);
+    if (props.onCancel) {
+      props.onCancel();
+    }
+  window.location.href = "https://officeindia.sharepoint.com/sites/ESSA/SitePages/MyProject.aspx";
 
-  if (props.onCancel) {
-    props.onCancel();
-  }
-
-  window.location.reload();
-};
+    // window.location.reload();
+  };
 
   const handleConfirm = async () => {
-    
     setShowPopup(false);
     setShowSubmitLoader(true);
 
     const isEditingDraft = props.initialData && props.initialData.projectId;
 
-if (isEditingDraft) {
-  await handleUpdateExisting(submitAction);
-  return;
-}
+    if (isEditingDraft) {
+      await handleUpdateExisting(submitAction);
+      return;
+    }
 
     try {
       // Step 1: Create the project item in ProjectCreationList
-     const projectRequestItem = await sp.web.lists
-  .getByTitle("ProjectCreationList")
-  .items.add({
-    Title: projectInfo.projectName,
-    ProjectName: projectInfo.projectName,
-    ProjectOverview: projectInfo.overview,
-    Status: submitAction === "submit" ? "Pending" : "Save as draft",
-    SubmitStatus: submitAction === "submit" ? "Yes" : "No",
-    ProjectTypeId: parseInt(projectInfo.projectType) || 0,
-    ClientName: projectInfo.clientName,
-    ProjectStartDate: projectInfo.startDate,
-    PreparedById: parseInt(projectInfo.preparedBy) || 0,
-  });
+      const projectRequestItem = await sp.web.lists
+        .getByTitle("ProjectCreationList")
+        .items.add({
+          Title: projectInfo.projectName,
+          ProjectName: projectInfo.projectName,
+          ProjectOverview: projectInfo.overview,
+          Status: submitAction === "submit" ? "Pending" : "Save as draft",
+          SubmitStatus: submitAction === "submit" ? "Yes" : "No",
+          ProjectTypeId: parseInt(projectInfo.projectType) || 0,
+          ClientName: projectInfo.clientName,
+          ProjectStartDate: projectInfo.startDate,
+          PreparedById: parseInt(projectInfo.preparedBy) || 0,
+        });
 
       const projectCreationListId = projectRequestItem.Id;
       console.log("Created Project ID:", projectCreationListId);
@@ -1140,6 +1185,8 @@ if (isEditingDraft) {
           userOptions.find((u) => u.value === row.assignedTo)?.email ?? "";
 
         return {
+          CustomID:
+            row.CustomID || generateCustomID(projectInfo.projectName, []),
           rowIndex: index + 1,
           deliverableId: selectedDeliverable?.ID ?? null,
           deliverableName: row.deliverable,
@@ -1148,13 +1195,12 @@ if (isEditingDraft) {
           organisationId: selectedOrganization?.ID ?? null,
           organisation: row.organisation,
           documentTypeId: selectedDocType?.ID ?? null,
-           docType: row.docType,
+          docType: row.docType,
           sequentialNumber: row.seqNumber,
           docNumber: row.docNumber,
           dueDate: row.dueDate ? row.dueDate.toISOString() : null,
           assignedToId: row.assignedTo,
           assignedToEmail: assignedUserEmail,
-          
         };
       });
 
@@ -1273,38 +1319,42 @@ if (isEditingDraft) {
 
       // Step 4: Build final payload
       const payload = {
-  projectCreationId: projectCreationListId,
-  projectName: projectInfo.projectName,
-  projectType: projectTypeName,
-  Status: submitAction === "submit" ? "Pending" : "Save as draft",
-  SubmitStatus: submitAction === "submit" ? "Yes" : "No",
-  preparedByName: selectedUser?.label ?? "",
-  preparedById: selectedUser?.value ?? null,
-  preparedByEmail: selectedUser?.email ?? "",
-  deliverables: deliverablesPayload,
-  emails: emailPayload,
-  
-};
+        projectCreationId: projectCreationListId,
+        projectName: projectInfo.projectName,
+        projectType: projectTypeName,
+        Status: submitAction === "submit" ? "Pending" : "Save as draft",
+        SubmitStatus: submitAction === "submit" ? "Yes" : "No",
+        preparedByName: selectedUser?.label ?? "",
+        preparedById: selectedUser?.value ?? null,
+        preparedByEmail: selectedUser?.email ?? "",
+        deliverables: deliverablesPayload,
+        emails: emailPayload,
+      };
 
       console.log("Payload to queue:", JSON.stringify(payload, null, 2));
 
       // Step 5: Drop one item into RequestProcessingQueue
       await sp.web.lists.getByTitle("RequestProcessingQueue").items.add({
-  Title: projectInfo.projectName,
-  ProjectCreationID: projectCreationListId,
-  PayloadJSON: JSON.stringify(payload),
-  Status: submitAction === "submit" ? "Pending" : "Save as draft",
-  ProcessingStatus: "Pending",
-});
+        Title: projectInfo.projectName,
+        ProjectCreationID: projectCreationListId,
+        PayloadJSON: JSON.stringify(payload),
+        Status: submitAction === "submit" ? "Pending" : "Save as draft",
+        ProcessingStatus: "Pending",
+      });
 
       // Step 6: Show success immediately — Power Automate handles the rest
       setShowSubmitLoader(false);
+      // Remember this name so duplicate check doesn't fire for it after save
+      lastSavedProjectNameRef.current = projectInfo.projectName.trim();
+      duplicatePopupShownRef.current = false;
+      setProjectNameExists(false);
       setPopupConfig({
         type: "success",
         title: "Success",
-        message:submitAction === "submit"
-      ? "Request submitted successfully!"
-      : "Request saved successfully!",
+        message:
+          submitAction === "submit"
+            ? "Request submitted successfully!"
+            : "Request saved successfully!",
       });
       setShowPopup(true);
     } catch (error) {
@@ -1329,6 +1379,72 @@ if (isEditingDraft) {
     setProjectInfo((prev) => ({ ...prev, [field]: value }));
     console.log(projectInfo);
   };
+
+  // Real-time Project Name uniqueness check against ProjectCreationList
+  const checkProjectNameExists = React.useCallback(
+    async (name: string) => {
+      const trimmed = name.trim();
+      if (!trimmed) {
+        setProjectNameExists(false);
+        return;
+      }
+      // Skip check when editing an existing draft with the same name
+      if (
+        props.initialData &&
+        props.initialData.projectName &&
+        props.initialData.projectName.trim().toLowerCase() ===
+          trimmed.toLowerCase()
+      ) {
+        setProjectNameExists(false);
+        return;
+      }
+      // Skip check if this is the name we just saved successfully
+      if (
+        lastSavedProjectNameRef.current &&
+        lastSavedProjectNameRef.current.trim().toLowerCase() ===
+          trimmed.toLowerCase()
+      ) {
+        setProjectNameExists(false);
+        return;
+      }
+      try {
+        setIsCheckingProjectName(true);
+        const items = await sp.web.lists
+          .getByTitle("ProjectCreationList")
+          .items.select("ID", "ProjectName")
+          .filter(`ProjectName eq '${trimmed.replace(/'/g, "''")}'`)
+          .top(1)();
+        const exists = items.length > 0;
+        setProjectNameExists(exists);
+        if (exists && !duplicatePopupShownRef.current) {
+          duplicatePopupShownRef.current = true;
+          setPopupConfig({
+            type: "validation",
+            title: "Duplicate Project Name",
+            message: `❌ Project name "${trimmed}" already exists. Please choose a different name.`,
+          });
+          setShowPopup(true);
+        }
+        if (!exists) {
+          duplicatePopupShownRef.current = false;
+        }
+      } catch (error) {
+        console.error("Error checking project name:", error);
+        setProjectNameExists(false);
+      } finally {
+        setIsCheckingProjectName(false);
+      }
+    },
+    [sp, props.initialData],
+  );
+
+  // Debounced real-time check: fires 500ms after user stops typing project name
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      checkProjectNameExists(projectInfo.projectName);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [projectInfo.projectName, checkProjectNameExists]);
 
   type DeliverableField = keyof DeliverableItem;
   const handleDeliverableChange = async (
@@ -1359,19 +1475,33 @@ if (isEditingDraft) {
   };
 
   const addDeliverableRow = () => {
-    setDeliverables((prev) => [
-      ...prev,
-      {
+    setDeliverables((prev) => {
+      // Collect all existing CustomIDs from current rows
+      const existingIDs: string[] = [];
+      for (const row of prev) {
+        if (row.CustomID && row.CustomID !== "") {
+          existingIDs.push(row.CustomID);
+        }
+      }
+
+      // Generate new CustomID
+      const newCustomID = projectInfo.projectName
+        ? generateCustomID(projectInfo.projectName, existingIDs)
+        : "";
+
+      const newRow = {
         deliverable: "",
         area: "",
         organisation: "",
         docType: "",
         seqNumber: "",
         docNumber: "",
-        dueDate: undefined,
+        dueDate: undefined as Date | undefined,
         assignedTo: 0,
-      },
-    ]);
+        CustomID: newCustomID,
+      };
+      return [...prev, newRow];
+    });
   };
 
   const deleteDeliverableRow = (index: number) => {
@@ -1420,6 +1550,27 @@ if (isEditingDraft) {
     });
   };
 
+  // function for custom id
+  const generateCustomID = (
+    projectName: string,
+    existingIDs: string[],
+  ): string => {
+    // Find the next sequential number from existing CustomIDs only
+    let maxNumber = 0;
+
+    existingIDs.forEach((id) => {
+      const parts = id.split("-");
+      const lastPart = parts[parts.length - 1];
+      const num = parseInt(lastPart, 10);
+      if (!isNaN(num) && num > maxNumber) {
+        maxNumber = num;
+      }
+    });
+
+    const nextNumber = maxNumber + 1;
+    return `${projectName}-${nextNumber}`;
+  };
+
   return (
     <div className={styles.newRequest}>
       {/* 🔄 SUBMIT TASK LOADER */}
@@ -1466,6 +1617,9 @@ if (isEditingDraft) {
             onChange={(_, val) => {
               handleProjectChange("projectName", val);
               setFieldErrors((prev) => ({ ...prev, projectName: false }));
+              // Reset so popup can fire again if user types a new duplicate name
+              duplicatePopupShownRef.current = false;
+              setProjectNameExists(false);
             }}
             className={fieldErrors.projectName ? styles.inputError : ""}
           />
@@ -1782,32 +1936,32 @@ if (isEditingDraft) {
       </div>
 
       <div className={styles.buttonRow}>
-  <PrimaryButton
-    style={{ height: "36px" }}
-    text="Save as Draft"
-    iconProps={{ iconName: "Save" }}
-    onClick={() => handleSubmit("draft")}
-    disabled={showSubmitLoader}
-    className={styles.saveDraftButton}
-  />
-  
-  <PrimaryButton
-    style={{ height: "36px" }}
-    text="Submit"
-    iconProps={{ iconName: "CheckMark" }}
-    onClick={() => handleSubmit("submit")}
-    disabled={showSubmitLoader}
-    className={styles.submitButton}
-  />
+        <PrimaryButton
+          style={{ height: "36px" }}
+          text="Save as Draft"
+          iconProps={{ iconName: "Save" }}
+          onClick={() => handleSubmit("draft")}
+          disabled={showSubmitLoader}
+          className={styles.saveDraftButton}
+        />
 
-  <DefaultButton
-    style={{ height: "36px" }}
-    text="Cancel"
-    iconProps={{ iconName: "Cancel" }}
-    onClick={handleCancel}
-    className={styles.cancelButton}
-  />
-</div>
+        <PrimaryButton
+          style={{ height: "36px" }}
+          text="Submit"
+          iconProps={{ iconName: "CheckMark" }}
+          onClick={() => handleSubmit("submit")}
+          disabled={showSubmitLoader}
+          className={styles.submitButton}
+        />
+
+        <DefaultButton
+          style={{ height: "36px" }}
+          text="Cancel"
+          iconProps={{ iconName: "Cancel" }}
+          onClick={handleCancel}
+          className={styles.cancelButton}
+        />
+      </div>
       {/* Custom Popup */}
       <CustomPopup
         isOpen={showPopup}

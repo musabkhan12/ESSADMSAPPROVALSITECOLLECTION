@@ -297,9 +297,6 @@ const MyApprovalContext = ({ props }: any) => {
   const [fieldErrors, setFieldErrors] = React.useState<{
     [key: string]: boolean;
   }>({});
-  const [consolidatorId, setConsolidatorId] = React.useState<number | null>(
-    null,
-  );
   const [projectConfigurationsData, setProjectConfigurationsData] =
     React.useState<any[]>([]);
 
@@ -311,6 +308,8 @@ const MyApprovalContext = ({ props }: any) => {
     key: "",
     direction: "ascending",
   });
+
+  const [isReadOnly, setIsReadOnly] = useState<boolean>(false);
 
   type ActionType =
     | "APPROVAL_ASSIGNED"
@@ -372,6 +371,7 @@ const MyApprovalContext = ({ props }: any) => {
   };
   const [loading, setLoading] = useState(true);
   const [actingForUser, setSetActingForUser] = useState([]);
+  const [selectedBehalfEmail, setSelectedBehalfEmail] = useState("");
 
   // const getApprovalmasterTasklist = async (value: any, actingfor?: any) => {
   //   // alert(`Status value is ${value} is acting for ${actingfor} in DMS`)
@@ -858,6 +858,8 @@ const MyApprovalContext = ({ props }: any) => {
   const handleTabClick = async (tab: React.SetStateAction<string>) => {
     if (activeTab === tab) return;
     setActiveTab(tab);
+    setSelectedBehalfEmail("");
+    actingforuseremail = "";
     setLoading(true);
     setMyApprovalsData([]);
     setStatusChange(true);
@@ -2051,7 +2053,6 @@ const MyApprovalContext = ({ props }: any) => {
   const getProjectConfiguration = async (): Promise<{
     documentControllerId: number | null;
     dccId: number | null;
-    consolidatorId: number | null;
   }> => {
     try {
       const items = await sp.web.lists
@@ -2082,10 +2083,9 @@ const MyApprovalContext = ({ props }: any) => {
         return {
           documentControllerId: items[0]?.DocumentControllerId || null,
           dccId: items[0]?.DCCId || null,
-          consolidatorId: items[0]?.ConsolidatorId || null,
         };
       }
-      return { documentControllerId: null, dccId: null, consolidatorId: null };
+      return { documentControllerId: null, dccId: null };
     } catch (error) {
       console.error("Error fetching Project Configuration:", error);
       await ErrorLogger.logError(
@@ -2094,7 +2094,7 @@ const MyApprovalContext = ({ props }: any) => {
         "getProjectConfiguration",
         "MyApprovalWebPart",
       );
-      return { documentControllerId: null, dccId: null, consolidatorId: null };
+      return { documentControllerId: null, dccId: null };
     }
   };
 
@@ -2103,7 +2103,6 @@ const MyApprovalContext = ({ props }: any) => {
   ): {
     documentControllerId: number | null;
     dccId: number | null;
-    consolidatorId: number | null;
   } => {
     console.log(`Filtering configuration for DocumentType: ${docType}`);
     const config = projectConfigurationsData.find(
@@ -2116,12 +2115,10 @@ const MyApprovalContext = ({ props }: any) => {
       console.log(`Found configuration for ${docType}:`, {
         documentControllerId: config.DocumentControllerId,
         dccId: config.DCCId,
-        consolidatorId: config.ConsolidatorId,
       });
       return {
         documentControllerId: config.DocumentControllerId || null,
         dccId: config.DCCId || null,
-        consolidatorId: config.ConsolidatorId || null,
       };
     }
 
@@ -2132,20 +2129,15 @@ const MyApprovalContext = ({ props }: any) => {
       documentControllerId:
         projectConfigurationsData[0]?.DocumentControllerId || null,
       dccId: projectConfigurationsData[0]?.DCCId || null,
-      consolidatorId: projectConfigurationsData[0]?.ConsolidatorId || null,
     };
   };
 
   React.useEffect(() => {
     const initializeData = async () => {
-      const {
-        documentControllerId: dcId,
-        dccId: dId,
-        consolidatorId: cId,
-      } = await getProjectConfiguration();
+      const { documentControllerId: dcId, dccId: dId } =
+        await getProjectConfiguration();
       setDocumentControllerId(dcId);
       setDccId(dId);
-      setConsolidatorId(cId);
     };
     initializeData();
   }, []);
@@ -2160,7 +2152,6 @@ const MyApprovalContext = ({ props }: any) => {
     const docTypeConfig = getConfigurationByDocType(task.DocType);
     setDocumentControllerId(docTypeConfig.documentControllerId);
     setDccId(docTypeConfig.dccId);
-    setConsolidatorId(docTypeConfig.consolidatorId);
 
     console.log(
       `Loaded configuration for task with DocType: ${task.DocType}`,
@@ -2171,6 +2162,8 @@ const MyApprovalContext = ({ props }: any) => {
     setShowProjectForm(true);
     setProjectNeedsFurtherApproval(task.DoYouNeedApproval || "Select");
     setProjectRemarks(task.Remarks || "");
+
+    setIsReadOnly(task.Status !== "Pending");
 
     if (task.DeliverableId) {
       const docInfo = await fetchDocumentForDeliverable(
@@ -2340,7 +2333,7 @@ const MyApprovalContext = ({ props }: any) => {
     }
   };
 
- const getDocumentComments = async (
+  const getDocumentComments = async (
     projectCreationID: number,
     deliverableDetailsID: number,
     revision: string,
@@ -2665,7 +2658,6 @@ const MyApprovalContext = ({ props }: any) => {
         {
           DocumentControllerId: docTypeConfig.documentControllerId,
           DCCId: docTypeConfig.dccId,
-          ConsolidatorId: docTypeConfig.consolidatorId,
         },
       );
 
@@ -3124,22 +3116,6 @@ const MyApprovalContext = ({ props }: any) => {
             console.log("No entries to delete");
           }
 
-          // Create DCC task
-          await sp.web.lists.getByTitle("ProjectApprovals").items.add({
-            ProjectCreationListIDId: projectId,
-            DeliverablesDetailsIdId: deliverableId,
-            AssignedToId: dccId,
-            RequestedById: props.context.pageContext.legacyPageContext.userId,
-            RequestedDate: new Date(),
-            DocumentType: selectedProjectTask.DocType,
-            ApproverRole: "DCC",
-            ApprovalCriteria: "Anyone",
-            Status: "Pending",
-            Level: `Level ${selectedProjectTask.ApprovalSN + 1}`,
-            SerialNumber: selectedProjectTask.ApprovalSN + 1,
-            RevisionNumber: selectedProjectTask.RevisionNumber,
-          });
-
           await updateDeliverableStatus(statusUpdate);
 
           // Send email notification
@@ -3393,12 +3369,8 @@ const MyApprovalContext = ({ props }: any) => {
             originalDocIds,
           );
         }
-      } else if (selectedProjectTask.ApprovalRole === "Consolidator") {
-        // Consolidator approved - move to DCC for final publication approval
-        await createDCCApproval();
       } else {
-        // Last hierarchy approver - create consolidator review task with document backups
-        await createConsolidatorApproval();
+        await createDCCApproval();
       }
     } else {
       // Create tasks for next approval level in the hierarchy
@@ -3474,168 +3446,6 @@ const MyApprovalContext = ({ props }: any) => {
           }
         }
       }
-    }
-  };
-
-  const createConsolidatorApproval = async () => {
-    if (!selectedProjectTask || !consolidatorId) return;
-    try {
-      let backupDocumentIds: number[] = [];
-      if (projectDocumentInfo && projectDocumentInfo.length > 0) {
-        backupDocumentIds = await createConsolidatorDocumentBackup(
-          selectedProjectTask.ProjectId!,
-          selectedProjectTask.DeliverableId!,
-          selectedProjectTask.RevisionNumber,
-          projectDocumentInfo,
-        );
-      }
-
-      await sp.web.lists.getByTitle("ProjectApprovals").items.add({
-        ProjectCreationListIDId: selectedProjectTask.ProjectId,
-        DeliverablesDetailsIdId: selectedProjectTask.DeliverableId,
-        AssignedToId: consolidatorId,
-        RequestedById: props.context.pageContext.legacyPageContext.userId,
-        RequestedDate: new Date(),
-        DocumentType: selectedProjectTask.DocType,
-        ApproverRole: "Consolidator",
-        ApprovalCriteria: "Anyone",
-        Status: "Pending",
-        Level: `Level ${selectedProjectTask.ApprovalSN + 1}`,
-        SerialNumber: selectedProjectTask.ApprovalSN + 1,
-        RevisionNumber: selectedProjectTask.RevisionNumber,
-      });
-
-      await updateDeliverableStatus("Approved");
-
-      const TouserUsers = users.filter(
-        (u) => String(u.value) === String(consolidatorId),
-      );
-      const TouserName = TouserUsers.length > 0 ? TouserUsers[0].label : null;
-      const CCUserName = users.filter(
-        (u) => String(u.value) === String(selectedProjectTask.InitiatedBy),
-      );
-      const CCName = CCUserName.length > 0 ? CCUserName[0].label : null;
-
-      const emailBody = buildApprovalEmailBody(
-        "APPROVAL_ASSIGNED",
-        TouserName,
-        CCName,
-        projectDocumentInfo.map((d) => ({
-          deliverable: selectedProjectTask.Deliverable,
-          fileName: d.fileName,
-          sharedLink: d.sharedLink,
-          id: d.id,
-        })),
-      );
-      await createEmailTriggerDetails(
-        consolidatorId,
-        [selectedProjectTask.InitiatedBy, documentControllerId],
-        emailBody,
-        `Consolidator Review – ${selectedProjectTask.Deliverable}`,
-        projectDocumentInfo.map((d) => d.id),
-      );
-    } catch (error) {
-      console.error("Error creating consolidator approval:", error);
-      await ErrorLogger.logError(
-        sp,
-        error,
-        "createConsolidatorApproval",
-        "MyApprovalWebPart",
-      );
-      throw error;
-    }
-  };
-
-  const createConsolidatorDocumentBackup = async (
-    projectId: number,
-    deliverableId: number,
-    revisionNumber: string,
-    documentInfo: Array<{
-      id: number;
-      fileName: string;
-      fileLeafRef?: string;
-      fileRef: string;
-      sharedLink: string;
-    }>,
-  ): Promise<number[]> => {
-    const backupDocumentIds: number[] = [];
-    try {
-      const projectItem = await sp.web.lists
-        .getByTitle("ProjectCreationList")
-        .items.getById(projectId)
-        .select("ProjectName")();
-      const deliverableItem = await sp.web.lists
-        .getByTitle("DeliverablesDetails")
-        .items.getById(deliverableId)
-        .select("DocNumber")();
-      const sanitize = (name: string) =>
-        name ? name.replace(/[<>:"/\\|?*]/g, "_") : "Unknown";
-      const projectName = sanitize(projectItem.ProjectName);
-      const docNumber = sanitize(deliverableItem.DocNumber);
-      const folderPath = `DeliverablesDocument/${projectName}/${docNumber}`;
-      const deliverablesDocList = sp.web.lists.getByTitle(
-        "DeliverablesDocument",
-      );
-
-      for (const doc of documentInfo) {
-        try {
-          const originalFile = sp.web.getFileByServerRelativePath(doc.fileRef);
-          const fileBuffer = await originalFile.getBuffer();
-          const lastDotIndex = doc.fileName.lastIndexOf(".");
-          const baseName =
-            lastDotIndex > -1
-              ? doc.fileName.substring(0, lastDotIndex)
-              : doc.fileName;
-          const extension =
-            lastDotIndex > -1 ? doc.fileName.substring(lastDotIndex) : "";
-          const backupFileName = `${baseName}_ConsolidatorBackup${extension}`;
-
-          const targetFolder = sp.web.getFolderByServerRelativePath(folderPath);
-
-          // Upload the file - this returns IFileInfo
-          const fileInfo = await targetFolder.files.addUsingPath(
-            backupFileName,
-            fileBuffer,
-            { Overwrite: true },
-          );
-
-          // Use the ServerRelativeUrl from fileInfo to get the file and then the item
-          const uploadFile = sp.web.getFileByServerRelativePath(
-            fileInfo.ServerRelativeUrl,
-          );
-          const fileItem = await uploadFile.getItem();
-          const itemWithId = await fileItem.select("Id")();
-          const backupFileItemId = itemWithId.Id;
-
-          await deliverablesDocList.items.getById(backupFileItemId).update({
-            ProjectID: String(projectId),
-            DeliverablesDetailsId: String(deliverableId),
-            Revision: revisionNumber,
-            IsMyTask: "No",
-            IsConsolidatorCopy: "Yes",
-          });
-
-          backupDocumentIds.push(backupFileItemId);
-        } catch (docError) {
-          console.error(`Error processing document ${doc.fileName}:`, docError);
-          await ErrorLogger.logError(
-            sp,
-            docError,
-            `createConsolidatorDocumentBackup.document`,
-            "MyApprovalWebPart",
-          );
-        }
-      }
-      return backupDocumentIds;
-    } catch (error) {
-      console.error("Error in createConsolidatorDocumentBackup:", error);
-      await ErrorLogger.logError(
-        sp,
-        error,
-        "createConsolidatorDocumentBackup",
-        "MyApprovalWebPart",
-      );
-      return backupDocumentIds;
     }
   };
 
@@ -4216,13 +4026,15 @@ const MyApprovalContext = ({ props }: any) => {
                     <select
                       id="Type"
                       name="Type"
-                      onChange={(e) =>
+                      value={selectedBehalfEmail}
+                      onChange={(e) => {
+                        setSelectedBehalfEmail(e.target.value);
                         handleStatusChange(
                           e.target.name,
                           "Pending",
                           e.target.value,
-                        )
-                      }
+                        );
+                      }}
                       className="form-select"
                       disabled={loading || actingForUser.length === 0}
                     >
@@ -6216,7 +6028,7 @@ const MyApprovalContext = ({ props }: any) => {
                                               </th>
                                             )}
 
-                                            {/* <th
+                                            <th
                                               style={{
                                                 minWidth: "80px",
                                                 maxWidth: "80px",
@@ -6259,7 +6071,7 @@ const MyApprovalContext = ({ props }: any) => {
                                                   />
                                                 </div>
                                               </div>
-                                            </th> */}
+                                            </th>
 
                                             <th
                                               style={{
@@ -6348,7 +6160,7 @@ const MyApprovalContext = ({ props }: any) => {
                                               </div>
                                             </th>
 
-                                            {/* <th
+                                            <th
                                               style={{
                                                 minWidth: "100px",
                                                 maxWidth: "100px",
@@ -6391,9 +6203,9 @@ const MyApprovalContext = ({ props }: any) => {
                                                   />
                                                 </div>
                                               </div>
-                                            </th> */}
+                                            </th>
 
-                                            {/* <th
+                                            <th
                                               style={{
                                                 minWidth: "130px",
                                                 maxWidth: "130px",
@@ -6427,9 +6239,9 @@ const MyApprovalContext = ({ props }: any) => {
                                                   />
                                                 </div>
                                               </div>
-                                            </th> */}
+                                            </th>
 
-                                            {/* <th
+                                            <th
                                               style={{
                                                 minWidth: "80px",
                                                 maxWidth: "80px",
@@ -6461,7 +6273,7 @@ const MyApprovalContext = ({ props }: any) => {
                                                   />
                                                 </div>
                                               </div>
-                                            </th> */}
+                                            </th>
 
                                             <th
                                               style={{
@@ -6620,28 +6432,30 @@ const MyApprovalContext = ({ props }: any) => {
                                                       }}
                                                     >
                                                       {item.ApprovalRole ===
-                                                        "Document Controller" && (
-                                                        <input
-                                                          type="checkbox"
-                                                          className="form-check-input"
-                                                          checked={selectedProjectItems.some(
-                                                            (selected) =>
-                                                              selected.Id ===
-                                                              item.Id,
-                                                          )}
-                                                          onChange={() =>
-                                                            handleProjectItemSelect(
-                                                              item.Id,
-                                                            )
-                                                          }
-                                                          style={{
-                                                            cursor: "pointer",
-                                                          }}
-                                                        />
-                                                      )}
+                                                        "Document Controller" &&
+                                                        item.Status ===
+                                                          "Pending" && (
+                                                          <input
+                                                            type="checkbox"
+                                                            className="form-check-input"
+                                                            checked={selectedProjectItems.some(
+                                                              (selected) =>
+                                                                selected.Id ===
+                                                                item.Id,
+                                                            )}
+                                                            onChange={() =>
+                                                              handleProjectItemSelect(
+                                                                item.Id,
+                                                              )
+                                                            }
+                                                            style={{
+                                                              cursor: "pointer",
+                                                            }}
+                                                          />
+                                                        )}
                                                     </td>
                                                   )}
-                                                  {/* <td
+                                                  <td
                                                     style={{
                                                       minWidth: "80px",
                                                       maxWidth: "80px",
@@ -6652,7 +6466,7 @@ const MyApprovalContext = ({ props }: any) => {
                                                     title={item.RequestID}
                                                   >
                                                     {item.RequestID}
-                                                  </td> */}
+                                                  </td>
                                                   <td
                                                     style={{
                                                       minWidth: "120px",
@@ -6677,7 +6491,7 @@ const MyApprovalContext = ({ props }: any) => {
                                                       {item.Deliverable}
                                                     </span>
                                                   </td>
-                                                  {/* <td
+                                                  <td
                                                     style={{
                                                       minWidth: "100px",
                                                       maxWidth: "100px",
@@ -6687,8 +6501,8 @@ const MyApprovalContext = ({ props }: any) => {
                                                     }
                                                   >
                                                     {item.Requester?.Title}
-                                                  </td> */}
-                                                  {/* <td
+                                                  </td>
+                                                  <td
                                                     style={{
                                                       minWidth: "130px",
                                                       maxWidth: "130px",
@@ -6713,8 +6527,8 @@ const MyApprovalContext = ({ props }: any) => {
                                                         },
                                                       )}
                                                     </div>
-                                                  </td> */}
-                                                  {/* <td
+                                                  </td>
+                                                  <td
                                                     style={{
                                                       minWidth: "80px",
                                                       maxWidth: "80px",
@@ -6724,7 +6538,7 @@ const MyApprovalContext = ({ props }: any) => {
                                                     <div className="btn btn-status">
                                                       {item.Status}
                                                     </div>
-                                                  </td> */}
+                                                  </td>
                                                   <td
                                                     style={{
                                                       minWidth: "50px",
@@ -6985,10 +6799,8 @@ const MyApprovalContext = ({ props }: any) => {
                                             <div className="col-md-4">
                                               <label className="form-label">
                                                 <strong>Documents:</strong>
-                                                {(selectedProjectTask?.ApprovalRole ===
-                                                  "Consolidator" ||
-                                                  selectedProjectTask?.ApprovalRole ===
-                                                    "DCC") &&
+                                                {selectedProjectTask?.ApprovalRole ===
+                                                  "DCC" &&
                                                   projectDocumentInfo.some(
                                                     (d) =>
                                                       d.isConsolidatorCopy ===
@@ -7024,9 +6836,7 @@ const MyApprovalContext = ({ props }: any) => {
                                                   // If role is Consolidator or DCC, check for backup copies
                                                   if (
                                                     selectedProjectTask?.ApprovalRole ===
-                                                      "Consolidator" ||
-                                                    selectedProjectTask?.ApprovalRole ===
-                                                      "DCC"
+                                                    "DCC"
                                                   ) {
                                                     const backupDocs =
                                                       projectDocumentInfo.filter(
@@ -7163,6 +6973,7 @@ const MyApprovalContext = ({ props }: any) => {
                                                       needsFurtherApproval: false,
                                                     }));
                                                   }}
+                                                  disabled={isReadOnly}
                                                   className={`form-select ${fieldErrors.needsFurtherApproval ? styles.inputError : ""}`}
                                                   style={
                                                     fieldErrors.needsFurtherApproval
@@ -7188,7 +6999,37 @@ const MyApprovalContext = ({ props }: any) => {
                                                 </select>
                                               </div>
 
-                                           
+                                              <div className="col-md-4">
+                                                <label className="form-label">
+                                                  <strong>
+                                                    Outgoing status
+                                                  </strong>
+                                                </label>
+                                                <select
+                                                  value={projectOutgoingstatus}
+                                                  onChange={(e) => {
+                                                    setprojectOutgoingstatus(
+                                                      e.target.value,
+                                                    );
+                                                    setFieldErrors((prev) => ({
+                                                      ...prev,
+                                                      outgoingStatus: false,
+                                                    }));
+                                                  }}
+                                                  disabled={isReadOnly}
+                                                  className={`form-select ${fieldErrors.outgoingStatus ? styles.inputError : ""}`}
+                                                >
+                                                  <option
+                                                    value="Select"
+                                                    disabled
+                                                  >
+                                                    Select
+                                                  </option>
+                                                  <option value="A">A</option>
+                                                  <option value="B">B</option>
+                                                  <option value="C">C</option>
+                                                </select>
+                                              </div>
                                             </>
                                           )}
 
@@ -7214,6 +7055,7 @@ const MyApprovalContext = ({ props }: any) => {
                                                       wantsToPublishInDossier: false,
                                                     }));
                                                   }}
+                                                  disabled={isReadOnly}
                                                   className={`form-select ${fieldErrors.wantsToPublishInDossier ? styles.inputError : ""}`}
                                                 >
                                                   <option
@@ -7244,6 +7086,7 @@ const MyApprovalContext = ({ props }: any) => {
                                                       codeStatus: false,
                                                     }));
                                                   }}
+                                                  disabled={isReadOnly}
                                                   className={`form-select ${fieldErrors.codeStatus ? styles.inputError : ""}`}
                                                 >
                                                   <option
@@ -7259,50 +7102,7 @@ const MyApprovalContext = ({ props }: any) => {
                                               </div>
                                             </>
                                           )}
-
-                                          
-                                        </div>
-
-                                        
-                                      </div>
-                                    </div>
-                                    
-
-                                    
-                                  )}
-<div className="card card-body">  
-  <div className="row">
-   <div className="col-md-4">
-                                                <label className="form-label">
-                                                  <strong>
-                                                    Outgoing status
-                                                  </strong>
-                                                </label>
-                                                <select
-                                                  value={projectOutgoingstatus}
-                                                  onChange={(e) => {
-                                                    setprojectOutgoingstatus(
-                                                      e.target.value,
-                                                    );
-                                                    setFieldErrors((prev) => ({
-                                                      ...prev,
-                                                      outgoingStatus: false,
-                                                    }));
-                                                  }}
-                                                  className={`form-select ${fieldErrors.outgoingStatus ? styles.inputError : ""}`}
-                                                >
-                                                  <option
-                                                    value="Select"
-                                                    disabled
-                                                  >
-                                                    Select
-                                                  </option>
-                                                  <option value="A">A</option>
-                                                  <option value="B">B</option>
-                                                  <option value="C">C</option>
-                                                </select>
-                                              </div>
-                                          <div className="col-md-8">
+                                          <div className="col-md-4">
                                             <div className="col-12">
                                               <label className="form-label">
                                                 <strong>Remarks</strong>
@@ -7319,20 +7119,24 @@ const MyApprovalContext = ({ props }: any) => {
                                                   }));
                                                 }}
                                                 placeholder="Enter your remarks here..."
-                                                rows={4}
+                                                rows={2}
+                                                disabled={isReadOnly}
                                                 className={`form-control ${fieldErrors.remarks ? styles.textareaError : ""}`}
+                                                style={{
+                                                  resize: "both",
+                                                  overflow: "auto",
+                                                }}
                                               />
                                             </div>
                                           </div>
-                                          </div>
-                                  {showDocumentComments && (
-
-                                    
+                                          {showDocumentComments && (
                                             <div
                                               className={styles.accordionItem}
                                             >
                                               <h2
-                                                className="text-dark font-16 fw-bold m-0"
+                                                className={
+                                                  styles.accordionHeader
+                                                }
                                               >
                                                 <div
                                                   className={
@@ -7525,7 +7329,7 @@ const MyApprovalContext = ({ props }: any) => {
                                           )}
                                         </div>
 
-                                  {selectedProjectTask?.ApprovalRole ===
+                                        {selectedProjectTask?.ApprovalRole ===
                                           "Document Controller" &&
                                           projectNeedsFurtherApproval ===
                                             "Yes" && (
@@ -7533,22 +7337,24 @@ const MyApprovalContext = ({ props }: any) => {
                                               <div className="card-body">
                                                 <div className="approval-projectHierarchy mt-4">
                                                   <div className="d-flex justify-content-between align-items-center mb-3">
-                                                    <h4 className="text-dark font-16 fw-bold m-0"
+                                                    <h5
                                                       style={{
                                                         margin: "inherit",
                                                       }}
                                                     >
                                                       Approval Hierarchy
-                                                    </h4>
-                                                    <button
-                                                      type="button"
-                                                      className="btn btn-primary btn-sm"
-                                                      onClick={() =>
-                                                        addNewProjectApprovalRow()
-                                                      }
-                                                    >
-                                                      + Add New Row
-                                                    </button>
+                                                    </h5>
+                                                    {!isReadOnly && (
+                                                      <button
+                                                        type="button"
+                                                        className="btn btn-primary btn-sm"
+                                                        onClick={() =>
+                                                          addNewProjectApprovalRow()
+                                                        }
+                                                      >
+                                                        + Add New Row
+                                                      </button>
+                                                    )}
                                                   </div>
                                                   <div className="table-responsive">
                                                     <table className="table table-bordered">
@@ -7582,13 +7388,15 @@ const MyApprovalContext = ({ props }: any) => {
                                                           >
                                                             Approval Criteria
                                                           </th>
-                                                          <th
-                                                            style={{
-                                                              width: "10%",
-                                                            }}
-                                                          >
-                                                            Action
-                                                          </th>
+                                                          {!isReadOnly && (
+                                                            <th
+                                                              style={{
+                                                                width: "10%",
+                                                              }}
+                                                            >
+                                                              Action
+                                                            </th>
+                                                          )}
                                                         </tr>
                                                       </thead>
                                                       <tbody>
@@ -7628,6 +7436,9 @@ const MyApprovalContext = ({ props }: any) => {
                                                                       }),
                                                                     );
                                                                   }}
+                                                                  disabled={
+                                                                    isReadOnly
+                                                                  }
                                                                   className={`form-select ${fieldErrors[`hierarchy_role_${index}`] ? styles.inputError : ""}`}
                                                                   style={
                                                                     fieldErrors[
@@ -7727,6 +7538,9 @@ const MyApprovalContext = ({ props }: any) => {
                                                                       }),
                                                                     );
                                                                   }}
+                                                                  isDisabled={
+                                                                    isReadOnly
+                                                                  }
                                                                   placeholder="Select Approver(s)"
                                                                   className={`people-picker ${fieldErrors[`hierarchy_approver_${index}`] ? styles.selectError : ""}`}
                                                                   classNamePrefix="react-select"
@@ -7779,6 +7593,9 @@ const MyApprovalContext = ({ props }: any) => {
                                                                       }),
                                                                     );
                                                                   }}
+                                                                  disabled={
+                                                                    isReadOnly
+                                                                  }
                                                                   className={`form-select ${fieldErrors[`hierarchy_criteria_${index}`] ? styles.inputError : ""}`}
                                                                   style={
                                                                     fieldErrors[
@@ -7808,29 +7625,31 @@ const MyApprovalContext = ({ props }: any) => {
                                                                   </option>
                                                                 </select>
                                                               </td>
-                                                              <td className="text-center">
-                                                                <button style={{minWidth:'auto'}}
-                                                                  type="button"
-                                                                  className="btn btn-outline-danger btn-sm"
-                                                                  onClick={() =>
-                                                                    deleteProjectApprovalRow(
-                                                                      index,
-                                                                    )
-                                                                  }
-                                                                  title={
-                                                                    projectHierarchy.length <=
-                                                                    1
-                                                                      ? "Cannot delete last row"
-                                                                      : "Delete Row"
-                                                                  }
-                                                                  disabled={
-                                                                    projectHierarchy.length <=
-                                                                    1
-                                                                  }
-                                                                >
-                                                                  🗑️
-                                                                </button>
-                                                              </td>
+                                                              {!isReadOnly && (
+                                                                <td className="text-center">
+                                                                  <button
+                                                                    type="button"
+                                                                    className="btn btn-outline-danger btn-sm"
+                                                                    onClick={() =>
+                                                                      deleteProjectApprovalRow(
+                                                                        index,
+                                                                      )
+                                                                    }
+                                                                    title={
+                                                                      projectHierarchy.length <=
+                                                                      1
+                                                                        ? "Cannot delete last row"
+                                                                        : "Delete Row"
+                                                                    }
+                                                                    disabled={
+                                                                      projectHierarchy.length <=
+                                                                      1
+                                                                    }
+                                                                  >
+                                                                    🗑️
+                                                                  </button>
+                                                                </td>
+                                                              )}
                                                             </tr>
                                                           ),
                                                         )}
@@ -7880,49 +7699,6 @@ const MyApprovalContext = ({ props }: any) => {
                                                         }}
                                                       >
                                                         Submit
-                                                      </button>
-                                                      <button
-                                                        type="button"
-                                                        className="btn btn-secondary"
-                                                        onClick={
-                                                          handleProjectBackClick
-                                                        }
-                                                      >
-                                                        Cancel
-                                                      </button>
-                                                    </>
-                                                  ) : selectedProjectTask?.ApprovalRole ===
-                                                    "Consolidator" ? (
-                                                    <>
-                                                      <button
-                                                        type="button"
-                                                        className="btn btn-success"
-                                                        disabled={
-                                                          showSubmitLoader
-                                                        }
-                                                        onClick={() => {
-                                                          if (
-                                                            !validateApprovalAction(
-                                                              "Approved",
-                                                            )
-                                                          )
-                                                            return;
-                                                          setPendingAction(
-                                                            "Approved",
-                                                          );
-                                                          setPopupType(
-                                                            "confirmation",
-                                                          );
-                                                          setPopupTitle(
-                                                            "Confirm Approval",
-                                                          );
-                                                          setPopupMessage(
-                                                            "Are you sure you want to approve and send to DCC?",
-                                                          );
-                                                          setPopupOpen(true);
-                                                        }}
-                                                      >
-                                                        Approve
                                                       </button>
                                                       <button
                                                         type="button"
@@ -8058,6 +7834,9 @@ const MyApprovalContext = ({ props }: any) => {
                                             </div>
                                           </div>
                                         </div>
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </div>

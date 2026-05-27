@@ -363,3 +363,17 @@
     background-color: var(--secondary-color);  color: #fff;
   }
 }
+
+
+.btnExport,
+.backButton {
+  width: 160px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+}
