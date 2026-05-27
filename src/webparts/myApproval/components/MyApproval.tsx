@@ -5625,12 +5625,12 @@ const MyApprovalContext = ({ props }: any) => {
                                             setShowNestedDMSTable(false)
                                           }
                                         >
-                                          <img
+                                          {/* <img
                                             src={require("../../../Assets/ExtraImage/xIcon.svg")}
                                             style={{ width: "1rem" }}
                                             className="me-1"
                                             alt="x"
-                                          />
+                                          /> */}
                                           Cancel
                                         </button>
                                       </div>
@@ -5656,12 +5656,12 @@ const MyApprovalContext = ({ props }: any) => {
                                             setShowNestedDMSTable(false)
                                           }
                                         >
-                                          <img
+                                          {/* <img
                                             src={require("../../../Assets/ExtraImage/xIcon.svg")}
                                             style={{ width: "1rem" }}
                                             className="me-1"
                                             alt="x"
-                                          />
+                                          /> */}
                                           Cancel
                                         </button>
                                       </div>

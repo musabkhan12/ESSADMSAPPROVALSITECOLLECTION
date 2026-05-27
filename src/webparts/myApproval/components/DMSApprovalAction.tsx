@@ -586,14 +586,14 @@ const getApprovalmasterTasklist = async () => {
 
       resultArrayThatContainstheColumnDetails.forEach((item, index) => {
         if (index % 3 === 0) {
-          detailRowsHTML += `<div style="margin-bottom: 10px;" class="row">`;
+          detailRowsHTML += `<div style="margin-bottom: 0px;" class="row">`;
         }
 
       detailRowsHTML += `
-  <div style="padding: 12px; min-width: 0;" class="col-sm-6">
+  <div style="padding: 0px 12px 0px 12px ; min-width: 0;" class="col-sm-6">
     <div style="
       font-weight: bold; 
-      margin-bottom: 5px;
+      margin-bottom: 0px;
       overflow: hidden;
       text-overflow: ellipsis; 
       white-space: nowrap;
@@ -1375,7 +1375,7 @@ const handleToggleClick = (event: any) => {
 
               <div className="row">
                 <div className="col-12">
-<div style={{ display: "flex", gap: "20px", marginTop: "20px" }}>
+<div style={{ display: "flex", gap: "20px", marginTop: "0px" }}>
   {/* Basic Information - Left Side */}
   <div 
     className="" 
@@ -1393,7 +1393,7 @@ const handleToggleClick = (event: any) => {
         alignItems: "center"
       }}
     >
-      <h3 className="text-dark fw-bold m-0 font-16 mb-1 bg-basic">Basic Information</h3>
+      <h3 className="text-dark fw-bold m-0 font-16 mb-2 bg-basic">Basic Information</h3>
     </div>
     <div id="dynamicDetailsContainer"></div>
   </div>
