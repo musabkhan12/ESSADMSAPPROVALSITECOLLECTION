@@ -590,7 +590,7 @@ const getApprovalmasterTasklist = async () => {
         }
 
       detailRowsHTML += `
-  <div style="padding: 0px 12px 0px 12px ; min-width: 0;" class="col-sm-6">
+  <div style="padding: 12px ; min-width: 0;" class="col-sm-4">
     <div style="
       font-weight: bold; 
       margin-bottom: 0px;
@@ -1375,15 +1375,15 @@ const handleToggleClick = (event: any) => {
 
               <div className="row">
                 <div className="col-12">
-<div style={{ display: "flex", gap: "20px", marginTop: "0px" }}>
+<div style={{ display: "block", gap: "20px", marginTop: "0px" }}>
   {/* Basic Information - Left Side */}
   <div 
     className="" 
     style={{ 
       backgroundColor: 'white',
       borderRadius: '5px', 
-      padding: '15px',
-      flex: "0 0 400px"  // Fixed width for basic info
+      padding: '15px', position:'relative',
+      // Fixed width for basic info
     }}
   >
     <div
@@ -1396,21 +1396,7 @@ const handleToggleClick = (event: any) => {
       <h3 className="text-dark fw-bold m-0 font-16 mb-2 bg-basic">Basic Information</h3>
     </div>
     <div id="dynamicDetailsContainer"></div>
-  </div>
-
-  {/* AI Summary - Right Side */}
-
-    <div
-      style={{
-        backgroundColor: "#ffffff",
-        borderRadius: "5px",
-        padding: "20px",
-        position: "relative",
-        boxShadow: "0 2px 10px rgba(0,0,0,0.15)",
-        flex: "1"  // Takes remaining space
-      }}
-    >
-     <div className="d-flex align-items-center justify-content-end gap-1">
+         <div className="d-flex align-items-center justify-content-end gap-1">
   <button
     type="button"
     style={{
@@ -1418,7 +1404,7 @@ const handleToggleClick = (event: any) => {
       border: "none",
       borderRadius: "4px",
       cursor: "pointer",
-      fontWeight: "600",
+      fontWeight: "600", position:'absolute', right:'10px', top:'10px',
       backgroundColor: openfileon ? "#dc3545" : "#0d6efd",
       color: "white",
       fontSize: "14px"
@@ -1428,10 +1414,23 @@ const handleToggleClick = (event: any) => {
     {openfileon ? "Close Preview" : "Preview"}
   </button>
 </div>
-      {/* <div>
-        {aiSummary ? aiSummary : "No AI Summary available."}
-      </div> */}
-    </div>
+  </div>
+
+  {/* AI Summary - Right Side */}
+
+    {/* <div
+      style={{
+        backgroundColor: "#ffffff",
+        borderRadius: "5px",
+        padding: "20px",
+        position: "relative",
+        boxShadow: "0 2px 10px rgba(0,0,0,0.15)",
+        flex: "1"  // Takes remaining space
+      }}
+    >
+
+  
+    </div> */}
 
 </div>
                   {/* <div className="" style={{ backgroundColor: 'white',  marginTop: '20px', borderRadius: '5px', padding: '15px' }}>
