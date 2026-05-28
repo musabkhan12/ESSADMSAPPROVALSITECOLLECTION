@@ -108,6 +108,7 @@ import Select from "react-select";
 import loaderGif from "../assets/Loder.gif"; //priyanshu
 import CustomPopup from "../../myProject/components/CustomPopup";
 import { ErrorLogger } from "../../../utils/ErrorLogger";
+import { encryptParams } from "../../../utils/CryptoUtils";
 
 interface ApprovalHierarchyItem {
   id?: number;
@@ -3960,6 +3961,16 @@ const MyApprovalContext = ({ props }: any) => {
     }
   };
 
+  const handleOpenDocument = async (
+    docId: number,
+    status: string,
+  ): Promise<void> => {
+    const mode: "edit" | "read" = status === "Pending" ? "edit" : "read";
+    const token = await encryptParams(docId, mode);
+    const url = `https://officeindia.sharepoint.com/sites/ESSA/SitePages/PDFViewer.aspx?token=${token}`;
+    window.open(url, "_blank");
+  };
+
   return (
     <div id="wrapper" ref={elementRef}>
       {/* 🔄 SUBMIT TASK LOADER */}
@@ -4238,7 +4249,10 @@ const MyApprovalContext = ({ props }: any) => {
                           {activeTab === "Intranet" ||
                           activeTab === "Automation" ? (
                             <>
-                              <div className="card card-body">
+                              <div
+                                className="card card-body"
+                                style={{ paddingBottom: "80px" }}
+                              >
                                 <table
                                   className="mtbalenew mt-0 table-centered table-nowrap table-borderless respot mb-0"
                                   style={{
@@ -4908,10 +4922,10 @@ const MyApprovalContext = ({ props }: any) => {
       > */}
                                       <li
                                         className={`prevPage page-item ${
-                                          currentGroup === 1 ? "disabled" : ""
+                                          currentPage === 1 ? "disabled" : ""
                                         }`}
                                         onClick={() =>
-                                          handleGroupChange("prev")
+                                          handlePageChange(currentPage - 1)
                                         }
                                       >
                                         <a
@@ -4953,19 +4967,16 @@ const MyApprovalContext = ({ props }: any) => {
 
                                       <li
                                         className={`nextPage page-item ${
-                                          currentGroup === totalGroups
+                                          currentPage === totalPages
                                             ? "disabled"
                                             : ""
                                         }`}
                                         onClick={() =>
-                                          handleGroupChange("next")
+                                          handlePageChange(currentPage + 1)
                                         }
                                       >
                                         <a
                                           className="page-link"
-                                          onClick={() =>
-                                            handlePageChange(currentPage + 1)
-                                          }
                                           aria-label="Next"
                                         >
                                           »
@@ -5534,10 +5545,10 @@ const MyApprovalContext = ({ props }: any) => {
       > */}
                                         <li
                                           className={`prevPage page-item ${
-                                            currentGroup === 1 ? "disabled" : ""
+                                            currentPage === 1 ? "disabled" : ""
                                           }`}
                                           onClick={() =>
-                                            handleGroupChange("prev")
+                                            handlePageChange(currentPage - 1)
                                           }
                                         >
                                           <a
@@ -5579,19 +5590,19 @@ const MyApprovalContext = ({ props }: any) => {
 
                                         <li
                                           className={`nextPage page-item ${
-                                            currentGroup === totalGroups
+                                            currentPage === totalPages
                                               ? "disabled"
                                               : ""
                                           }`}
                                           onClick={() =>
-                                            handleGroupChange("next")
+                                            handlePageChange(currentPage + 1)
                                           }
                                         >
                                           <a
                                             className="page-link"
-                                            onClick={() =>
-                                              handlePageChange(currentPage + 1)
-                                            }
+                                            // onClick={() =>
+                                            //   handlePageChange(currentPage + 1)
+                                            // }
                                             aria-label="Next"
                                           >
                                             »
@@ -6565,12 +6576,21 @@ const MyApprovalContext = ({ props }: any) => {
                                         </tbody>
                                       </table>
                                       {currentData?.length > 0 && (
-                                        <nav className="pagination-container">
+                                        <nav
+                                          className="pagination-container"
+                                          style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            padding: "12px 0 70px 0",
+                                          }}
+                                        >
                                           <ul className="pagination">
                                             <li
-                                              className={`prevPage page-item ${currentGroup === 1 ? "disabled" : ""}`}
+                                              className={`prevPage page-item ${currentPage === 1 ? "disabled" : ""}`}
                                               onClick={() =>
-                                                handleGroupChange("prev")
+                                                handlePageChange(
+                                                  currentPage - 1,
+                                                )
                                               }
                                             >
                                               <a className="page-link">«</a>
@@ -6601,9 +6621,11 @@ const MyApprovalContext = ({ props }: any) => {
                                               },
                                             )}
                                             <li
-                                              className={`nextPage page-item ${currentGroup === totalGroups ? "disabled" : ""}`}
+                                              className={`nextPage page-item ${currentPage === totalPages ? "disabled" : ""}`}
                                               onClick={() =>
-                                                handleGroupChange("next")
+                                                handlePageChange(
+                                                  currentPage + 1,
+                                                )
                                               }
                                             >
                                               <a
@@ -6886,10 +6908,10 @@ const MyApprovalContext = ({ props }: any) => {
                                                             cursor: "pointer",
                                                           }}
                                                           onClick={() =>
-                                                            window.open(
-                                                              `https://officeindia.sharepoint.com/sites/ESSA/SitePages/PDFViewer.aspx?docId=${doc.id}`,
-                                                              "_blank",
-                                                              "noopener,noreferrer",
+                                                            handleOpenDocument(
+                                                              doc.id,
+                                                              selectedProjectTask?.Status ??
+                                                                "",
                                                             )
                                                           }
                                                           title="Click to open document"

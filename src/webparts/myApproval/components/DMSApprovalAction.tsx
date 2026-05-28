@@ -1513,35 +1513,88 @@ style={{
           zIndex: isFullScreen ? 9999 : "auto",
           background: "#fff",
           display: editableUrl ? "block" : "none",
-          marginTop: "0px", 
-          clipPath: "none", 
+          marginTop: "0px",
+          clipPath: "none",
           visibility: "hidden", 
         }}
         title="File Preview"
         onLoad={() => {
-          try {
-            const iframe = document.getElementById("filePreview") as HTMLIFrameElement;
-            const iframeDocument = iframe.contentDocument || iframe.contentWindow?.document;
-            if (iframeDocument) {
-              const style = iframeDocument.createElement("style");
-              style.innerHTML = `
-                [data-testid='close-button'],
-                [aria-label='Close'],
-                .od-ItemContent-closeButton,
-                [data-automationid='closeButton'] {
+          const iframe = document.getElementById("filePreview") as HTMLIFrameElement;
+          if (!iframe) return;
+          iframe.style.visibility = "hidden";
+
+          const tryHide = () => {
+            try {
+              const doc = iframe.contentDocument || iframe.contentWindow?.document;
+              if (!doc || !doc.body) {
+                setTimeout(tryHide, 200);
+                return;
+              }
+
+              const styleId = "hide-delete-btn";
+              if (!doc.getElementById(styleId)) {
+                const style = doc.createElement("style");
+                style.id = styleId;
+                style.innerHTML = `
+                [data-automationid="deleteCommand"],
+                [id="deleteCommand"],
+                button[aria-label="Delete this file"],
+                button[aria-label="Close"],
+                button[aria-label="Close file"] {
                   display: none !important;
+                  visibility: hidden !important;
+                  pointer-events: none !important;
+                  width: 0 !important;
+                  overflow: hidden !important;
                 }
               `;
-              iframeDocument.head.appendChild(style);
+                doc.head?.appendChild(style);
+              }
+
+              new MutationObserver(() => {
+                const selectors = [
+                  '[data-automationid="deleteCommand"]',
+                  '[id="deleteCommand"]',
+                  'button[aria-label="Delete this file"]',
+                  'button[aria-label="Close"]',
+                  'button[aria-label="Close file"]',
+                  '[data-automationid="close"]',
+                  '[id="closeCommand"]'
+                ];
+                selectors.forEach(sel => {
+                  const btn = doc.querySelector(sel) as HTMLElement;
+                  if (btn) {
+                    btn.style.display = "none";
+                    btn.style.visibility = "hidden";
+                  }
+                });
+              }).observe(doc.body, { childList: true, subtree: true });
+
+              iframe.style.visibility = "visible";
+
+            } catch (e) {
+              iframe.style.visibility = "visible";
             }
-            iframe.style.visibility = "visible";
-          } catch (error) {
-            console.error("Error in iframe onLoad:", error);
-            const iframe = document.getElementById("filePreview") as HTMLIFrameElement;
-            if (iframe) iframe.style.visibility = "visible";
-          }
+          };
+
+          setTimeout(tryHide, 500);
         }}
       />
+      {!isFullScreen && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '0px',
+            left: '60px',
+            width: '42px',
+            height: '48px',
+            backgroundColor: 'transparent',
+            zIndex: 10,
+            pointerEvents: 'all',
+            cursor: 'default'
+          }}
+        />
+      )}
     </div>
   </div>
 )}

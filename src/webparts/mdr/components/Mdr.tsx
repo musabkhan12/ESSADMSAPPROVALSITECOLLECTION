@@ -15,6 +15,7 @@ import Provider from "../../../GlobalContext/provider";
 import { DefaultButton } from "@fluentui/react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ErrorLogger } from "../../../utils/ErrorLogger";
+import { encryptParams } from "../../../utils/CryptoUtils";
 
 interface IMDRProps {
   context: WebPartContext;
@@ -187,8 +188,9 @@ const MDR: React.FC<IMDRProps> = ({ context, siteUrl }) => {
         .top(1)();
 
       if (documents.length > 0) {
-        const fileUrl = `https://officeindia.sharepoint.com/sites/ESSA/SitePages/PDFViewer.aspx?docId=${documents[0].ID}`;
+        const token = await encryptParams(documents[0].ID, "read");
 
+        const fileUrl = `https://officeindia.sharepoint.com/sites/ESSA/SitePages/PDFViewer.aspx?token=${token}`;
         return {
           url: fileUrl,
           name: documents[0].FileLeafRef,

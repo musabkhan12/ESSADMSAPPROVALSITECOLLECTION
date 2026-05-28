@@ -17,6 +17,7 @@ import { SPFI } from "@pnp/sp/presets/all";
 import NewRequest from "./NewRequest";
 import { getSP } from "../loc/pnpjsConfig";
 import { spfi, SPFx } from "@pnp/sp";
+import { encryptParams } from "../../../utils/CryptoUtils";
 
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
@@ -277,7 +278,7 @@ const Dashboard = ({ props }: any) => {
           "ProjectStartDate",
           "Status",
         )
-        .expand("PreparedBy", "ProjectType")();
+        .expand("PreparedBy", "ProjectType").filter(`PreparedById eq ${props.context.pageContext.legacyPageContext.userId}`)();
 
       console.log("Project items loaded:", projectItems);
 
@@ -735,8 +736,11 @@ const Dashboard = ({ props }: any) => {
       return extension ? `${cleanedName}.${extension}` : cleanedName;
     };
 
-    const handleDocumentClick = (documentId: number) => {
-      const tronUrl = `https://officeindia.sharepoint.com/sites/ESSA/SitePages/PDFViewer.aspx?docId=${documentId}`;
+    const handleDocumentClick = async (documentId: number) => {
+      const token = await encryptParams(documentId, "read");
+
+      const tronUrl = `https://officeindia.sharepoint.com/sites/ESSA/SitePages/PDFViewer.aspx?token=${token}`;
+
       window.open(tronUrl, "_blank", "noopener,noreferrer");
     };
 
@@ -975,7 +979,7 @@ const Dashboard = ({ props }: any) => {
           justifyContent: "center",
           alignItems: "center",
           height: "100vh",
-           width: "100%",
+          width: "100%",
         }}
       >
         <img
@@ -1292,7 +1296,9 @@ const Dashboard = ({ props }: any) => {
                                   </th>
                                   <th>Document Number</th>
                                   <th>Organization</th>
-                                  <th  style={{ minWidth: "100px" }}>Action Date Time</th>
+                                  <th style={{ minWidth: "100px" }}>
+                                    Action Date Time
+                                  </th>
                                   <th style={{ minWidth: "100px" }}>
                                     Revision Number
                                   </th>
@@ -1330,7 +1336,7 @@ const Dashboard = ({ props }: any) => {
                                           ?.Organisation || ""}
                                       </td>
 
-                                      <td  style={{ minWidth: "100px" }}>
+                                      <td style={{ minWidth: "100px" }}>
                                         {deliverable.Status !== "Pending" &&
                                         deliverable.Modified
                                           ? new Date(

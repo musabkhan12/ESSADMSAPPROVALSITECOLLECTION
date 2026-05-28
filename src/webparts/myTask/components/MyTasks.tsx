@@ -28,6 +28,7 @@ import pen from "../assets/pen.png";
 import newlogo from "../assets/logo-high.png";
 import eye from "../assets/eye.png";
 import { ErrorLogger } from "../../../utils/ErrorLogger";
+import { encryptParams } from "../../../utils/CryptoUtils";
 
 interface IMyTaskProps {
   context: WebPartContext;
@@ -953,6 +954,12 @@ const MyTask = ({ props }: any) => {
     }
   };
 
+  const getSecurePdfUrl = async (documentId: number): Promise<string> => {
+    const token = await encryptParams(documentId, "read");
+
+    return `https://officeindia.sharepoint.com/sites/ESSA/SitePages/PDFViewer.aspx?token=${token}`;
+  };
+
   // Upload files to SharePoint document library
   const uploadFileToFolder = async (
     folderServerRelativeUrl: string,
@@ -1090,10 +1097,7 @@ const MyTask = ({ props }: any) => {
       // console.log("Encoded server-relative folder path:", encodedFolderPath);
       const serverRelativeFolderPath = `${props.context.pageContext.web.serverRelativeUrl}/${folderPath}`;
 
-console.log(
-  "Server-relative folder path:",
-  serverRelativeFolderPath,
-);
+      console.log("Server-relative folder path:", serverRelativeFolderPath);
 
       for (const fileObj of selectedFiles) {
         if (!fileObj.file) continue;
@@ -1101,7 +1105,8 @@ console.log(
         const fileName = fileObj.file.name; //Timestamp removed
         const fileBuffer = await fileObj.file.arrayBuffer();
 
-const uploadUrl = `${props.context.pageContext.web.absoluteUrl}/_api/web/GetFolderByServerRelativeUrl('${serverRelativeFolderPath}')/Files/add(url='${fileName}', overwrite=true)`;        console.log("Upload URL:", uploadUrl);
+        const uploadUrl = `${props.context.pageContext.web.absoluteUrl}/_api/web/GetFolderByServerRelativeUrl('${serverRelativeFolderPath}')/Files/add(url='${fileName}', overwrite=true)`;
+        console.log("Upload URL:", uploadUrl);
 
         const uploadRes = await fetch(uploadUrl, {
           method: "POST",
@@ -1984,165 +1989,198 @@ const uploadUrl = `${props.context.pageContext.web.absoluteUrl}/_api/web/GetFold
 
                           {/* Upload & Comment Section */}
                           <div className="row">
-                              <div className="col-sm-6">
-                          <div className={styles.formActions}>
-                         
-                            {/* Show upload field only for Pending tasks */}
-                        
-                            {selectedTask?.status === "Pending" && (
-                              <>
-                                <label>Upload Documents*</label>
-                                <input
-                                  ref={fileInputRef}
-                                  type="file"
-                                  className={fileError ? styles.inputError : ""}
-                                  multiple
-                                  accept=".pdf,.doc,.docx,.ppt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint"
-                                  onChange={(e) => {
-                                    setFileError(false);
+                            <div className="col-sm-6">
+                              <div className={styles.formActions}>
+                                {/* Show upload field only for Pending tasks */}
 
-                                    if (e.target.files) {
-                                      const allowedExtensions =
-                                        /\.(pdf|doc|docx|ppt)$/i;
-
-                                      const validFiles: UploadedFile[] = [];
-
-                                      for (const file of Array.from(
-                                        e.target.files,
-                                      )) {
-                                        // Existing file type validation
-                                        if (
-                                          !allowedExtensions.test(file.name)
-                                        ) {
-                                          setPopup({
-                                            isOpen: true,
-                                            type: "validation",
-                                            title: "Invalid File Type",
-                                            message:
-                                              "Only PDF, Word (.doc, .docx), and PowerPoint (.ppt) files are allowed. Images are not supported.",
-                                          });
-                                          continue;
-                                        }
-
-                                        // New special character validation
-                                        if (/[&%#<>:"/\\|?*]/.test(file.name)) {
-                                          setPopup({
-                                            isOpen: true,
-                                            type: "error",
-                                            title: "Invalid File Name",
-                                            message:
-                                              "Please remove special characters from file name.",
-                                          });
-                                          if (fileInputRef.current) {
-                                            fileInputRef.current.value = "";
-                                          }
-                                          continue;
-                                        }
-
-                                        validFiles.push({
-                                          name: file.name,
-                                          file: file,
-                                          url: undefined,
-                                        });
+                                {selectedTask?.status === "Pending" && (
+                                  <>
+                                    <label>Upload Documents*</label>
+                                    <input
+                                      ref={fileInputRef}
+                                      type="file"
+                                      className={
+                                        fileError ? styles.inputError : ""
                                       }
+                                      multiple
+                                      accept=".pdf,.doc,.docx,.ppt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint"
+                                      onChange={(e) => {
+                                        setFileError(false);
 
-                                      if (validFiles.length > 0) {
-                                        setSelectedFiles((prev) => [
-                                          ...prev,
-                                          ...validFiles,
-                                        ]);
-                                      }
-                                    }
-                                  }}
-                                />
+                                        if (e.target.files) {
+                                          const allowedExtensions =
+                                            /\.(pdf|doc|docx|ppt)$/i;
 
-                                {/* Show selected files list */}
-                                {selectedFiles.length > 0 && (
-                                  <div className={styles.selectedFilesList}>
-                                    <label>Selected Files:</label>
-                                    {selectedFiles.map((file, index) => (
-                                      <div
-                                        key={index}
-                                        className={styles.fileItem}
-                                      >
-                                        <span>{file.name}</span>
-                                        <button style={{minWidth:'auto'}}
-                                          type="button"
-                                          onClick={() => {
-                                            const newFiles = [...selectedFiles];
-                                            newFiles.splice(index, 1);
-                                            setSelectedFiles(newFiles);
-                                            if (fileInputRef.current) {
-                                              fileInputRef.current.value = "";
+                                          const validFiles: UploadedFile[] = [];
+
+                                          for (const file of Array.from(
+                                            e.target.files,
+                                          )) {
+                                            // Existing file type validation
+                                            if (
+                                              !allowedExtensions.test(file.name)
+                                            ) {
+                                              setPopup({
+                                                isOpen: true,
+                                                type: "validation",
+                                                title: "Invalid File Type",
+                                                message:
+                                                  "Only PDF, Word (.doc, .docx), and PowerPoint (.ppt) files are allowed. Images are not supported.",
+                                              });
+                                              continue;
                                             }
-                                          }}
-                                          className={styles.removeFileBtn}
-                                        >
-                                          ✕
-                                        </button>
+
+                                            // New special character validation
+                                            if (
+                                              /[&%#<>:"/\\|?*]/.test(file.name)
+                                            ) {
+                                              setPopup({
+                                                isOpen: true,
+                                                type: "error",
+                                                title: "Invalid File Name",
+                                                message:
+                                                  "Please remove special characters from file name.",
+                                              });
+                                              if (fileInputRef.current) {
+                                                fileInputRef.current.value = "";
+                                              }
+                                              continue;
+                                            }
+
+                                            validFiles.push({
+                                              name: file.name,
+                                              file: file,
+                                              url: undefined,
+                                            });
+                                          }
+
+                                          if (validFiles.length > 0) {
+                                            setSelectedFiles((prev) => [
+                                              ...prev,
+                                              ...validFiles,
+                                            ]);
+                                          }
+                                        }
+                                      }}
+                                    />
+
+                                    {/* Show selected files list */}
+                                    {selectedFiles.length > 0 && (
+                                      <div className={styles.selectedFilesList}>
+                                        <label>Selected Files:</label>
+                                        {selectedFiles.map((file, index) => (
+                                          <div
+                                            key={index}
+                                            className={styles.fileItem}
+                                          >
+                                            <span>{file.name}</span>
+                                            <button
+                                              style={{ minWidth: "auto" }}
+                                              type="button"
+                                              onClick={() => {
+                                                const newFiles = [
+                                                  ...selectedFiles,
+                                                ];
+                                                newFiles.splice(index, 1);
+                                                setSelectedFiles(newFiles);
+                                                if (fileInputRef.current) {
+                                                  fileInputRef.current.value =
+                                                    "";
+                                                }
+                                              }}
+                                              className={styles.removeFileBtn}
+                                            >
+                                              ✕
+                                            </button>
+                                          </div>
+                                        ))}
                                       </div>
-                                    ))}
-                                  </div>
+                                    )}
+                                  </>
                                 )}
-                              </>
-                            )}
 
-                               {/* Existing Documents Section - for Pending tasks */}
-                            {selectedTask?.status === "Pending" &&
-                              existingDocuments.length > 0 && (
-                                <>
-                                  <label>Previously Uploaded Documents:</label>
-                                  <div className={styles.existingFilesList}>
-                                    {existingDocuments.map((doc, index) => (
-                                      <p className="mb-0" key={index}>
-                                        <a className="font-12"
-                                          href={`https://officeindia.sharepoint.com/sites/ESSA/SitePages/PDFViewer.aspx?docId=${doc.id}`}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                        >
-                                          {doc.name}
-                                        </a>
-                                      </p>
-                                    ))}
-                                  </div>
-                                </>
-                              )}
+                                {/* Existing Documents Section - for Pending tasks */}
+                                {selectedTask?.status === "Pending" &&
+                                  existingDocuments.length > 0 && (
+                                    <>
+                                      <label>
+                                        Previously Uploaded Documents:
+                                      </label>
+                                      <div className={styles.existingFilesList}>
+                                        {existingDocuments.map((doc, index) => (
+                                          <p className="mb-0" key={index}>
+                                            <a
+                                              className="font-12"
+                                              href="#"
+                                              onClick={async (e) => {
+                                                e.preventDefault();
 
-                            {/* For Completed/In-Progress tasks - show all uploaded files */}
-                            {(selectedTask?.status === "Approved" ||
-                              selectedTask?.status === "In-Progress") &&
-                              existingDocuments.length > 0 && (
-                                <>
-                                  <label>All Uploaded Documents:</label>
-                                  <div className={styles.existingFilesList}>
-                                    {existingDocuments.map((doc, index) => (
-                                      <p key={index}>
-                                        <a
-                                          href={`https://officeindia.sharepoint.com/sites/ESSA/SitePages/PDFViewer.aspx?docId=${doc.id}`}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                        >
-                                          {doc.name}
-                                        </a>
-                                      </p>
-                                    ))}
-                                  </div>
-                                </>
-                              )}
+                                                const secureUrl =
+                                                  await getSecurePdfUrl(doc.id);
 
-</div></div>
- <div className="col-sm-6">
-                            <label>Comment</label>
-                            <textarea className="form-control" rows={2}
-                              placeholder="Enter your comment"
-                              value={comment}
-                              onChange={(e) => setComment(e.target.value)}
-                              disabled={
-                                selectedTask?.status === "Approved" ||
-                                selectedTask?.status === "In-Progress"
-                              }
-                            />
-                          </div></div>
+                                                window.open(
+                                                  secureUrl,
+                                                  "_blank",
+                                                  "noopener,noreferrer",
+                                                );
+                                              }}
+                                            >
+                                              {doc.name}
+                                            </a>
+                                          </p>
+                                        ))}
+                                      </div>
+                                    </>
+                                  )}
+
+                                {/* For Completed/In-Progress tasks - show all uploaded files */}
+                                {(selectedTask?.status === "Approved" ||
+                                  selectedTask?.status === "In-Progress") &&
+                                  existingDocuments.length > 0 && (
+                                    <>
+                                      <label>All Uploaded Documents:</label>
+                                      <div className={styles.existingFilesList}>
+                                        {existingDocuments.map((doc, index) => (
+                                          <p key={index}>
+                                            <a
+                                              href="#"
+                                              onClick={async (e) => {
+                                                e.preventDefault();
+
+                                                const secureUrl =
+                                                  await getSecurePdfUrl(doc.id);
+
+                                                window.open(
+                                                  secureUrl,
+                                                  "_blank",
+                                                  "noopener,noreferrer",
+                                                );
+                                              }}
+                                            >
+                                              {doc.name}
+                                            </a>
+                                          </p>
+                                        ))}
+                                      </div>
+                                    </>
+                                  )}
+                              </div>
+                            </div>
+                            <div className="col-sm-6">
+                              <label>Comment</label>
+                              <textarea
+                                className="form-control"
+                                rows={2}
+                                placeholder="Enter your comment"
+                                value={comment}
+                                onChange={(e) => setComment(e.target.value)}
+                                disabled={
+                                  selectedTask?.status === "Approved" ||
+                                  selectedTask?.status === "In-Progress"
+                                }
+                              />
+                            </div>
+                          </div>
 
                           {/* Document Comments Accordion */}
                           {showDocumentComments && (
