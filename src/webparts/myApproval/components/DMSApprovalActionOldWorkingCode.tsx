@@ -1557,7 +1557,12 @@ if (container) {
     setToggleLog((prevData)=>!prevData);
     getApprovalmasterTasklist();
 
-    Swal.fire('Success', 'File Rejected Successfully', 'success').then((result)=>{
+    Swal.fire({
+      title: 'File Rejected Successfully',
+      icon: 'success',
+      confirmButtonColor: '#4dc6c0',
+      confirmButtonText: 'OK',
+    }).then((result)=>{
       if(result.isConfirmed){
         window.location.reload();
       }
@@ -1576,7 +1581,12 @@ if (container) {
       setToggleLog((prevData)=>!prevData);
       getApprovalmasterTasklist();
       getCurrrentuser()
-      Swal.fire('Success', 'File Rejected Successfully', 'success').then((result)=>{
+      Swal.fire({
+        title: 'File Rejected Successfully',
+        icon: 'success',
+        confirmButtonColor: '#4dc6c0',
+        confirmButtonText: 'OK',
+      }).then((result)=>{
         if(result.isConfirmed){
           window.location.reload();
         }
@@ -1610,7 +1620,12 @@ if (container) {
         }
         setToggleLog((prevData)=>!prevData);
         getApprovalmasterTasklist();
-        Swal.fire('Success', 'File Rework Successfully', 'success').then((result)=>{
+        Swal.fire({
+          title: 'File Rework Successfully',
+          icon: 'success',
+          confirmButtonColor: '#4dc6c0',
+          confirmButtonText: 'OK',
+        }).then((result)=>{
           if(result.isConfirmed){
             window.location.reload();
           }

@@ -735,14 +735,13 @@ const handleToggleClick = (event: any) => {
     if(buttonText === "Approve"){
       try {
         const userConfirmed = await Swal.fire({
-          title: 'Are you sure?',
-          text: "Do you want to approve this File Request?",
+          title: 'Do you want to approve this File Request?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, approve it!',
-          cancelButtonText: 'No, cancel',
+          confirmButtonText: 'Ok',
+          cancelButtonText: 'Cancel',
         });
     
         if (!userConfirmed.isConfirmed) {
@@ -1079,7 +1078,12 @@ const handleToggleClick = (event: any) => {
                 Remark:remark,
         }
 
-        Swal.fire('Success', 'File Approved Successfully', 'success').then((result)=>{
+        Swal.fire({
+          title: 'File Approved Successfully',
+          icon: 'success',
+          confirmButtonColor: '#4dc6c0',
+          confirmButtonText: 'OK',
+        }).then((result)=>{
           if(result.isConfirmed){
             window.location.reload();
           }
@@ -1101,14 +1105,13 @@ const handleToggleClick = (event: any) => {
       setFinalStatus = 'Rejected'
       try{
         const userConfirmed = await Swal.fire({
-          title: 'Are you sure?',
-          text: "Do you want to Reject this File Request?",
+          title: "Do you want to Reject this File Request?",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, reject it!',
-          cancelButtonText: 'No, cancel',
+          confirmButtonText: 'Ok',
+          cancelButtonText: 'Cancel',
         });
     
         if (!userConfirmed.isConfirmed) {
@@ -1173,7 +1176,12 @@ const handleToggleClick = (event: any) => {
         }
    
 
-      Swal.fire('Success', 'File Rejected Successfully', 'success').then((result)=>{
+        Swal.fire({
+          title: 'File Rejected Successfully',
+          icon: 'success',
+          confirmButtonColor: '#4dc6c0',
+          confirmButtonText: 'OK',
+        }).then((result)=>{
         if(result.isConfirmed){
           window.location.reload();
         }
@@ -1192,7 +1200,12 @@ const handleToggleClick = (event: any) => {
       // setToggleLog((prevData)=>!prevData);
       // getApprovalmasterTasklist();
       // getCurrrentuser()
-      Swal.fire('Success', 'File Rejected Successfully', 'success').then((result)=>{
+      Swal.fire({
+        title: 'File Rejected Successfully',
+        icon: 'success',
+        confirmButtonColor: '#4dc6c0',
+        confirmButtonText: 'OK',
+      }).then((result)=>{
         if(result.isConfirmed){
           window.location.reload();
         }
@@ -1203,14 +1216,13 @@ const handleToggleClick = (event: any) => {
     else if(buttonText === "Rework"){
       try {
         const userConfirmed = await Swal.fire({
-          title: 'Are you sure?',
-          text: "Do you want to Rework this File Request?",
+          title: "Do you want to Rework this File Request?",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, rework it!',
-          cancelButtonText: 'No, cancel',
+          confirmButtonText: 'Ok',
+          cancelButtonText: 'Cancel',
         });
     
         if (!userConfirmed.isConfirmed) {
@@ -1226,7 +1238,12 @@ const handleToggleClick = (event: any) => {
         }
         // setToggleLog((prevData)=>!prevData);
         // getApprovalmasterTasklist();
-        Swal.fire('Success', 'File Rework Successfully', 'success').then((result)=>{
+        Swal.fire({
+          title: 'File Rework Successfully',
+          icon: 'success',
+          confirmButtonColor: '#4dc6c0',
+          confirmButtonText: 'OK',
+        }).then((result)=>{
           if(result.isConfirmed){
             window.location.reload();
           }
@@ -1801,7 +1818,7 @@ style={{
                                   </td>
                                   <td style={{ minWidth: '70px', maxWidth: '70px', textAlign: 'center' }}>
                                     {/* <div className="finish mb-0"></div>{item.FileUID.Status} */}
-                                    <div className="finish mb-0">  {item.Log !=""?item.Log :"Pending" } </div>
+                                    <div className="finish mb-0">{item.Log !== null && item.Log !== undefined && item.Log !== "" ? item.Log : "Pending"}</div>
                                   </td>
                                 </tr>
                               )

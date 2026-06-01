@@ -81,6 +81,14 @@
           "manifest": "./src/webparts/delegationMaster/DelegationMasterWebPart.manifest.json"
         }
       ]
+    },
+    "manage-master-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/manageMaster/ManageMasterWebPart.js",
+          "manifest": "./src/webparts/manageMaster/ManageMasterWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -95,6 +103,7 @@
     "MyTaskWebPartStrings": "lib/webparts/myTask/loc/{locale}.js",
     "MdrWebPartStrings": "lib/webparts/mdr/loc/{locale}.js",
     "DelegationWebPartStrings": "lib/webparts/delegation/loc/{locale}.js",
-    "DelegationMasterWebPartStrings": "lib/webparts/delegationMaster/loc/{locale}.js"
+    "DelegationMasterWebPartStrings": "lib/webparts/delegationMaster/loc/{locale}.js",
+    "ManageMasterWebPartStrings": "lib/webparts/manageMaster/loc/{locale}.js"
   }
 }

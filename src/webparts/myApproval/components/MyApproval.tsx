@@ -2335,59 +2335,66 @@ const MyApprovalContext = ({ props }: any) => {
   };
 
   const getDocumentComments = async (
-    projectCreationID: number,
-    deliverableDetailsID: number,
-    revision: string,
-  ) => {
-    try {
-      const items = await sp.web.lists
-        .getByTitle("DocumentComments")
-        .items.select("*", "IsDeleted")
-        .filter(
-          `ProjectID eq ${projectCreationID} and DeliverablesDetailsId eq ${deliverableDetailsID}`,
-        )
-        .orderBy("ID", false)();
-      if (items.length > 0) {
-        const comments: DocumentComment[] = items.map((item: any) => ({
-          id: item.Id,
-          userName: item.UserName || "",
-          commentDate: item.CommentDate
-            ? new Date(item.CommentDate).toLocaleString("en-GB")
-            : "",
-          pageNumber: item.PageNumber || "",
-          revision: item.Revision || "",
-          comment: item.Comment || "",
-          isDeleted: item.IsDeleted === true || item.IsDeleted === "Yes",
-        }));
-        const activeComments = comments.filter((comment) => !comment.isDeleted);
-        setAllDocumentComments(activeComments);
-        const filteredComments = comments.filter(
-          (comment) => comment.revision === revision,
-        );
-        setDocumentComments(filteredComments);
-        const uniqueVersions = [
-          ...new Set(comments.map((comment) => comment.revision)),
-        ].sort();
-        setVersionList(uniqueVersions);
-        setSelectedVersion(revision);
-        setShowDocumentComments(true);
-      } else {
-        setShowDocumentComments(false);
-        setDocumentComments([]);
-        setAllDocumentComments([]);
-        setVersionList([]);
-      }
-    } catch (error) {
-      console.error("Error fetching document comments:", error);
-      await ErrorLogger.logError(
-        sp,
-        error,
-        "getDocumentComments",
-        "MyApprovalWebPart",
+  projectCreationID: number,
+  deliverableDetailsID: number,
+  revision: string,
+) => {
+  try {
+    const items = await sp.web.lists
+      .getByTitle("DocumentComments")
+      .items.select("*", "IsDeleted")
+      .filter(
+        `ProjectID eq ${projectCreationID} and DeliverablesDetailsId eq ${deliverableDetailsID}`,
+      )
+      .orderBy("ID", false)();
+   
+    if (items.length > 0) {
+      const comments: DocumentComment[] = items.map((item: any) => ({
+        id: item.Id,
+        userName: item.UserName || "",
+        commentDate: item.CommentDate
+          ? new Date(item.CommentDate).toLocaleString("en-GB")
+          : "",
+        pageNumber: item.PageNumber || "",
+        revision: item.Revision || "",
+        comment: item.Comment || "",
+        isDeleted: item.IsDeleted === true || item.IsDeleted === "Yes",
+      }));
+     
+      // Filter out deleted comments
+      const activeComments = comments.filter((comment) => !comment.isDeleted);
+      setAllDocumentComments(activeComments);
+     
+      // Filter active comments by revision
+      const filteredComments = activeComments.filter(
+        (comment) => comment.revision === revision,
       );
+      setDocumentComments(filteredComments);
+     
+      // Get unique versions from active comments only
+      const uniqueVersions = [
+        ...new Set(activeComments.map((comment) => comment.revision)),
+      ].sort();
+      setVersionList(uniqueVersions);
+      setSelectedVersion(revision);
+      setShowDocumentComments(true);
+    } else {
       setShowDocumentComments(false);
+      setDocumentComments([]);
+      setAllDocumentComments([]);
+      setVersionList([]);
     }
-  };
+  } catch (error) {
+    console.error("Error fetching document comments:", error);
+    await ErrorLogger.logError(
+      sp,
+      error,
+      "getDocumentComments",
+      "MyApprovalWebPart",
+    );
+    setShowDocumentComments(false);
+  }
+};
 
   const onVersionChange = (version: string) => {
     setSelectedVersion(version);
