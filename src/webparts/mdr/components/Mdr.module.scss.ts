@@ -1,0 +1,46 @@
+/* tslint:disable */
+require("./Mdr.module.css");
+const styles = {
+  mdrContainer: 'mdrContainer_f7f55c36',
+  pageHeader: 'pageHeader_f7f55c36',
+  headerActions: 'headerActions_f7f55c36',
+  btnDark: 'btnDark_f7f55c36',
+  btnExport: 'btnExport_f7f55c36',
+  btnSecondary: 'btnSecondary_f7f55c36',
+  mdrTableSection: 'mdrTableSection_f7f55c36',
+  card: 'card_f7f55c36',
+  cardBody: 'cardBody_f7f55c36',
+  tableResponsive: 'tableResponsive_f7f55c36',
+  newTable: 'newTable_f7f55c36',
+  tableHeader: 'tableHeader_f7f55c36',
+  submissionHeader: 'submissionHeader_f7f55c36',
+  incomingHeader: 'incomingHeader_f7f55c36',
+  outgoingHeader: 'outgoingHeader_f7f55c36',
+  latestRevision: 'latestRevision_f7f55c36',
+  commentHeader: 'commentHeader_f7f55c36',
+  revHeader: 'revHeader_f7f55c36',
+  statusHeader: 'statusHeader_f7f55c36',
+  dateHeader: 'dateHeader_f7f55c36',
+  transmittalHeader: 'transmittalHeader_f7f55c36',
+  documentHeader: 'documentHeader_f7f55c36',
+  tableCell: 'tableCell_f7f55c36',
+  revisionCircle: 'revisionCircle_f7f55c36',
+  dateCircle: 'dateCircle_f7f55c36',
+  returnDateCircle: 'returnDateCircle_f7f55c36',
+  badge: 'badge_f7f55c36',
+  badgeInProgress: 'badgeInProgress_f7f55c36',
+  badgePending: 'badgePending_f7f55c36',
+  badgeRework: 'badgeRework_f7f55c36',
+  badgeRejected: 'badgeRejected_f7f55c36',
+  badgeApproved: 'badgeApproved_f7f55c36',
+  badgeDefault: 'badgeDefault_f7f55c36',
+  documentLink: 'documentLink_f7f55c36',
+  loading: 'loading_f7f55c36',
+  loadingSpinner: 'loadingSpinner_f7f55c36',
+  spin: 'spin_f7f55c36',
+  noData: 'noData_f7f55c36',
+  backButton: 'backButton_f7f55c36'
+};
+
+export default styles;
+/* tslint:enable */

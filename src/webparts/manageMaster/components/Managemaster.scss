@@ -1,0 +1,106 @@
+.manage-master .box1 {
+    text-align: center;
+    margin-bottom: 20px;
+    height: 121px;
+    margin: 0 auto;
+    padding: 14px;
+    text-align: left;
+    width: 100%; border-radius: 0px; position: relative; cursor: pointer;
+}
+.newopacity{
+    position: absolute;
+    right: 20px;
+    width: 38%;
+    opacity: 0.04;
+}
+.paddb{
+    min-height: calc(100vh - 139px);
+  }
+  #s4-workspace{overflow: hidden !important;}
+.manage-master .box1 {
+    background: #fff !important;
+}
+.manage-master .col-md-3 {
+    width: 18.8% !important;
+    padding: 0px;
+    margin: 7px;
+}
+.manage-master .box1 .icon {
+    font-size: 20px;
+    height: 50px;
+    margin-bottom: 4px;
+    padding: 10px;
+    width: 52px;
+    background: #ededed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.manage-master .box1 .icon img{
+    width: 30px;
+}
+.manage-master .box1:hover .icon{
+    background: var(--primary-color);
+}
+.manage-master .box1:hover .icon img{
+    filter: brightness(0) invert(1);
+}
+.manage-master .box1 p {
+    display: block;
+    font-size: 14px; font-weight: 500;
+}
+a
+{
+    text-decoration: none;
+}
+a:hover
+{
+
+    text-decoration: none;
+}
+// .manage-master .box1:hover {
+//     border: 2px solid #54ade0;
+//     background: #efefef !important;
+// }
+.content-page
+{
+  top: -1rem!important;
+}
+#s4-workspace{overflow-y: auto !important;}
+.manage-master{
+    padding-left: 1rem;
+    padding-right: 0;
+}
+@media(max-width:1920px){
+    .paddb{min-height: calc(100vh - 163px);}
+    .paddb{padding-bottom: 50px;}
+    .manage-master .col-md-3 {
+        width: 19% !important;
+    }
+}
+@media(max-width:1660px)
+{
+    .manage-master .col-md-3 {
+        width: 18.8% !important;
+    }
+
+}
+@media(max-width:1440px)
+{
+    #s4-workspace{overflow-y: auto !important;}
+    .paddb{padding-bottom: 50px;}
+    .manage-master .col-md-3 {
+        width: 23.5% !important;
+    }
+}
+@media(max-width:1280px){
+    .manage-master .col-md-3 {
+        width: 23.5% !important;
+    }
+}
+@media(max-width:640px){
+    #s4-workspace{overflow-y: auto !important;}
+    .manage-master .col-md-3 {
+        width: 100% !important;
+    }
+}
