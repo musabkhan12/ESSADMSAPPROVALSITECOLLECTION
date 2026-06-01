@@ -227,6 +227,8 @@ const MyApprovalContext = ({ props }: any) => {
     { id: "Pending", name: "Pending" },
     { id: "Approved", name: "Approved" },
     { id: "Rejected", name: "Rejected" },
+        { id: "Rework", name: "Rework" },
+ 
   ]);
 
   const [ProjectWorkflowdata, setProjectWorkflowdata] = useState([]);
