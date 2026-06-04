@@ -141,6 +141,7 @@ const NewRequest: React.FC<INewRequestProps> = (props) => {
   const duplicatePopupShownRef = React.useRef(false);
   // Tracks the project name that was successfully saved — skip duplicate check for this
   const lastSavedProjectNameRef = React.useRef<string>("");
+  const customIDCounterRef = React.useRef(0);
 
   // Define deliverable item type
   interface DeliverableItem {
@@ -687,6 +688,18 @@ const NewRequest: React.FC<INewRequestProps> = (props) => {
         assignedTo: d.assignedToId || 0,
         CustomID: d.CustomID || "", // <--- ADD THIS - preserve existing ID
       }));
+      // ✅ Seed the counter ref so new rows never reuse a deleted row's number
+      let maxSeen = 0;
+      data.deliverables.forEach((d: any) => {
+        const id = d.CustomID || "";
+        if (id) {
+          const parts = id.split("-");
+          const num = parseInt(parts[parts.length - 1], 10);
+          if (!isNaN(num) && num > maxSeen) maxSeen = num;
+        }
+      });
+      customIDCounterRef.current = maxSeen;
+
       // Set deliverables after master data is loaded
       setTimeout(() => {
         setDeliverables(mappedDeliverables);
@@ -758,23 +771,29 @@ const NewRequest: React.FC<INewRequestProps> = (props) => {
         ),
       ];
       const emailPayload = uniqueAssigneeIds.map((assigneeId) => {
-        const assigneeUser = userOptions.find((u) => u.value === assigneeId);
-        const tableRowsHtml = deliverables
-          .map(
-            (d, i) => `
-        <tr>
-          <td style="border:1px solid #ccc;padding:6px;text-align:center;">${i + 1}</td>
-          <td style="border:1px solid #ccc;padding:6px;">${d.docNumber || "-"}</td>
-          <td style="border:1px solid #ccc;padding:6px;">${d.deliverable || "-"}</td>
-          <td style="border:1px solid #ccc;padding:6px;text-align:center;">0</td>
-          <td style="border:1px solid #ccc;padding:6px;text-align:center;">-</td>
-          <td style="border:1px solid #ccc;padding:6px;">TR-${String(i + 1).padStart(3, "0")}</td>
-          <td style="border:1px solid #ccc;padding:6px;">${sentDate}</td>
-          <td style="border:1px solid #ccc;padding:6px;">-</td>
-        </tr>
-      `,
-          )
-          .join("");
+  const assigneeUser = userOptions.find((u) => u.value === assigneeId);
+
+  // ✅ Filter deliverables for this assignee only
+  const filteredDeliverables = deliverables.filter(
+    (d) => d.assignedTo === assigneeId
+  );
+
+  if (filteredDeliverables.length === 0) return null;
+
+  const tableRowsHtml = filteredDeliverables
+    .map((d, i) => `
+      <tr>
+        <td style="border:1px solid #ccc;padding:6px;text-align:center;">${i + 1}</td>
+        <td style="border:1px solid #ccc;padding:6px;">${d.docNumber ?? "-"}</td>
+        <td style="border:1px solid #ccc;padding:6px;">${d.deliverable ?? "-"}</td>
+        <td style="border:1px solid #ccc;padding:6px;text-align:center;">0</td>
+        <td style="border:1px solid #ccc;padding:6px;text-align:center;">-</td>
+        <td style="border:1px solid #ccc;padding:6px;">TR-${String(i + 1).padStart(3, "0")}</td>
+        <td style="border:1px solid #ccc;padding:6px;">${sentDate}</td>
+        <td style="border:1px solid #ccc;padding:6px;">-</td>
+      </tr>`
+    )
+    .join("");
         const emailTable = `
         <table style="border-collapse:collapse;width:100%;max-width:900px;font-size:13px;margin-top:15px;">
           <thead>
@@ -806,16 +825,28 @@ const NewRequest: React.FC<INewRequestProps> = (props) => {
         Regards,<br/>
         ${regardsName}
       `;
-        return {
-          toUserId: assigneeId,
-          toUserEmail: assigneeUser?.email || "",
-          ccUserId: selectedUser?.value || null,
-          ccUserEmail: selectedUser?.email || "",
-          assigneeName: assigneeUser?.label || "Vendor",
-          subject: `New Task Assigned – ${projectInfo.projectName}`,
-          body: emailBody,
-        };
-      });
+        const tableRows = filteredDeliverables.map((d, i) => ({
+    no: i + 1,
+    docNumber: d.docNumber ?? "-",
+    deliverable: d.deliverable ?? "-",
+    revision: "0",
+    status: "-",
+    transmittal: `TR-${String(i + 1).padStart(3, "0")}`,
+    sentDate: sentDate,
+    remarks: "-",
+  }));
+
+  return {
+    toUserId: assigneeId,
+    toUserEmail: assigneeUser?.email ?? "",
+    ccUserId: selectedUser?.value ?? null,
+    ccUserEmail: selectedUser?.email ?? "",
+    assigneeName: assigneeUser?.label ?? "Vendor",
+    subject: `New Task Assigned – ${projectInfo.projectName}`,
+    body: emailBody,
+    tableRows: tableRows,
+  };
+}).filter(email => email !== null);
       // Step 3: Build final payload
       const payload = {
         projectCreationId: projectId,
@@ -1225,31 +1256,30 @@ const NewRequest: React.FC<INewRequestProps> = (props) => {
 
       const emailPayload = uniqueAssigneeIds.map((assigneeId) => {
         const assigneeUser = userOptions.find((u) => u.value === assigneeId);
+ 
+        
+  // ✅ Filter deliverables for this assignee only
+  const filteredDeliverables = deliverables.filter(
+    (d) => d.assignedTo === assigneeId
+  );
 
-        // Build table rows HTML
-        const tableRowsHtml = deliverables
-          .map(
-            (d, i) => `
-        <tr>
-          <td style="border:1px solid #ccc;padding:6px;text-align:center;">${
-            i + 1
-          }</td>
-          <td style="border:1px solid #ccc;padding:6px;">${
-            d.docNumber ?? "-"
-          }</td>
-          <td style="border:1px solid #ccc;padding:6px;">${
-            d.deliverable ?? "-"
-          }</td>
-          <td style="border:1px solid #ccc;padding:6px;text-align:center;">0</td>
-          <td style="border:1px solid #ccc;padding:6px;text-align:center;">-</td>
-          <td style="border:1px solid #ccc;padding:6px;">TR-${String(
-            i + 1,
-          ).padStart(3, "0")}</td>
-          <td style="border:1px solid #ccc;padding:6px;">${sentDate}</td>
-          <td style="border:1px solid #ccc;padding:6px;">-</td>
-        </tr>`,
-          )
-          .join("");
+  // ✅ If no deliverables assigned to this user, skip email
+  if (filteredDeliverables.length === 0) return null;
+
+  const tableRowsHtml = filteredDeliverables
+    .map((d, i) => `
+      <tr>
+        <td style="border:1px solid #ccc;padding:6px;text-align:center;">${i + 1}</td>
+        <td style="border:1px solid #ccc;padding:6px;">${d.docNumber ?? "-"}</td>
+        <td style="border:1px solid #ccc;padding:6px;">${d.deliverable ?? "-"}</td>
+        <td style="border:1px solid #ccc;padding:6px;text-align:center;">0</td>
+        <td style="border:1px solid #ccc;padding:6px;text-align:center;">-</td>
+        <td style="border:1px solid #ccc;padding:6px;">TR-${String(i + 1).padStart(3, "0")}</td>
+        <td style="border:1px solid #ccc;padding:6px;">${sentDate}</td>
+        <td style="border:1px solid #ccc;padding:6px;">-</td>
+      </tr>`
+    )
+    .join("");
 
         // Build full email table HTML
         const emailTable = `
@@ -1289,29 +1319,28 @@ const NewRequest: React.FC<INewRequestProps> = (props) => {
         Regards,<br/>
         ${regardsName}`;
 
-        // Build tableRows array (for JSON format compatibility)
-        const tableRows = deliverables.map((d, i) => ({
-          no: i + 1,
-          docNumber: d.docNumber ?? "-",
-          deliverable: d.deliverable ?? "-",
-          revision: "0",
-          status: "-",
-          transmittal: `TR-${String(i + 1).padStart(3, "0")}`,
-          sentDate: sentDate,
-          remarks: "-",
-        }));
+        const tableRows = filteredDeliverables.map((d, i) => ({
+    no: i + 1,
+    docNumber: d.docNumber ?? "-",
+    deliverable: d.deliverable ?? "-",
+    revision: "0",
+    status: "-",
+    transmittal: `TR-${String(i + 1).padStart(3, "0")}`,
+    sentDate: sentDate,
+    remarks: "-",
+  }));
 
         return {
-          toUserId: assigneeId,
-          toUserEmail: assigneeUser?.email ?? "",
-          ccUserId: selectedUser?.value ?? null,
-          ccUserEmail: selectedUser?.email ?? "",
-          assigneeName: assigneeUser?.label ?? "Vendor",
-          subject: `New Task Assigned – ${projectInfo.projectName}`,
-          body: emailBody,
-          tableRows: tableRows,
-        };
-      });
+    toUserId: assigneeId,
+    toUserEmail: assigneeUser?.email ?? "",
+    ccUserId: selectedUser?.value ?? null,
+    ccUserEmail: selectedUser?.email ?? "",
+    assigneeName: assigneeUser?.label ?? "Vendor",
+    subject: `New Task Assigned – ${projectInfo.projectName}`,
+    body: emailBody,
+    tableRows: tableRows,
+  };
+}).filter(email => email !== null);
 
       const projectTypeName =
         projectTypeOptions.find((opt) => opt.key === projectInfo.projectType)
@@ -1438,14 +1467,6 @@ const NewRequest: React.FC<INewRequestProps> = (props) => {
     [sp, props.initialData],
   );
 
-  // Debounced real-time check: fires 500ms after user stops typing project name
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      checkProjectNameExists(projectInfo.projectName);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [projectInfo.projectName, checkProjectNameExists]);
-
   type DeliverableField = keyof DeliverableItem;
   const handleDeliverableChange = async (
     index: number,
@@ -1476,17 +1497,22 @@ const NewRequest: React.FC<INewRequestProps> = (props) => {
 
   const addDeliverableRow = () => {
     setDeliverables((prev) => {
-      // Collect all existing CustomIDs from current rows
-      const existingIDs: string[] = [];
+      // ✅ Use the monotonic counter — never go below it even if rows were deleted
+      // Also check current array in case IDs were assigned outside this counter (e.g. from project type prefill)
+      let maxFromArray = 0;
       for (const row of prev) {
-        if (row.CustomID && row.CustomID !== "") {
-          existingIDs.push(row.CustomID);
+        if (row.CustomID) {
+          const parts = row.CustomID.split("-");
+          const num = parseInt(parts[parts.length - 1], 10);
+          if (!isNaN(num) && num > maxFromArray) maxFromArray = num;
         }
       }
 
-      // Generate new CustomID
+      const nextNumber = Math.max(customIDCounterRef.current, maxFromArray) + 1;
+      customIDCounterRef.current = nextNumber; // ✅ Advance the counter — delete can never pull it back
+
       const newCustomID = projectInfo.projectName
-        ? generateCustomID(projectInfo.projectName, existingIDs)
+        ? `${projectInfo.projectName}-${nextNumber}`
         : "";
 
       const newRow = {
@@ -1596,9 +1622,7 @@ const NewRequest: React.FC<INewRequestProps> = (props) => {
               alt="Submitting..."
               style={{ width: "90px", height: "90px" }}
             />
-            <p className="text-white mt-3 fw-semibold">
-              Submitting, please wait...
-            </p>
+            <p className="text-white mt-3 fw-semibold">Please wait...</p>
           </div>
         </div>
       )}
@@ -1620,6 +1644,9 @@ const NewRequest: React.FC<INewRequestProps> = (props) => {
               // Reset so popup can fire again if user types a new duplicate name
               duplicatePopupShownRef.current = false;
               setProjectNameExists(false);
+            }}
+            onBlur={() => {
+              void checkProjectNameExists(projectInfo.projectName);
             }}
             className={fieldErrors.projectName ? styles.inputError : ""}
           />
