@@ -227,8 +227,7 @@ const MyApprovalContext = ({ props }: any) => {
     { id: "Pending", name: "Pending" },
     { id: "Approved", name: "Approved" },
     { id: "Rejected", name: "Rejected" },
-        { id: "Rework", name: "Rework" },
- 
+    { id: "Rework", name: "Rework" },
   ]);
 
   const [ProjectWorkflowdata, setProjectWorkflowdata] = useState([]);
@@ -275,8 +274,16 @@ const MyApprovalContext = ({ props }: any) => {
     ProjectItem[]
   >([]);
   const [outgoingStatus, setOutgoingStatus] = React.useState<string>("");
-  const [mdrStatus, setMdrStatus] = React.useState<string>("");
+  const [mdrOptions, setMdrOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
   const [currentUserId, setCurrentUserId] = React.useState<number | null>(null);
+  const [outgoingStatusOptions, setOutgoingStatusOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [codeStatusOptions, setCodeStatusOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
 
   // ========== UI CONTROL STATE ==========
 
@@ -2050,6 +2057,9 @@ const MyApprovalContext = ({ props }: any) => {
     getCurrrentuser();
     fetchUsers();
     fetchApproverRoles();
+    fetchOutgoingStatusOptions();
+    fetchCodeStatusOptions();
+    fetchMdrOptions();
     setCurrentUserId(props.context.pageContext.legacyPageContext.userId);
   }, []);
 
@@ -2337,66 +2347,66 @@ const MyApprovalContext = ({ props }: any) => {
   };
 
   const getDocumentComments = async (
-  projectCreationID: number,
-  deliverableDetailsID: number,
-  revision: string,
-) => {
-  try {
-    const items = await sp.web.lists
-      .getByTitle("DocumentComments")
-      .items.select("*", "IsDeleted")
-      .filter(
-        `ProjectID eq ${projectCreationID} and DeliverablesDetailsId eq ${deliverableDetailsID}`,
-      )
-      .orderBy("ID", false)();
-   
-    if (items.length > 0) {
-      const comments: DocumentComment[] = items.map((item: any) => ({
-        id: item.Id,
-        userName: item.UserName || "",
-        commentDate: item.CommentDate
-          ? new Date(item.CommentDate).toLocaleString("en-GB")
-          : "",
-        pageNumber: item.PageNumber || "",
-        revision: item.Revision || "",
-        comment: item.Comment || "",
-        isDeleted: item.IsDeleted === true || item.IsDeleted === "Yes",
-      }));
-     
-      // Filter out deleted comments
-      const activeComments = comments.filter((comment) => !comment.isDeleted);
-      setAllDocumentComments(activeComments);
-     
-      // Filter active comments by revision
-      const filteredComments = activeComments.filter(
-        (comment) => comment.revision === revision,
+    projectCreationID: number,
+    deliverableDetailsID: number,
+    revision: string,
+  ) => {
+    try {
+      const items = await sp.web.lists
+        .getByTitle("DocumentComments")
+        .items.select("*", "IsDeleted")
+        .filter(
+          `ProjectID eq ${projectCreationID} and DeliverablesDetailsId eq ${deliverableDetailsID}`,
+        )
+        .orderBy("ID", false)();
+
+      if (items.length > 0) {
+        const comments: DocumentComment[] = items.map((item: any) => ({
+          id: item.Id,
+          userName: item.UserName || "",
+          commentDate: item.CommentDate
+            ? new Date(item.CommentDate).toLocaleString("en-GB")
+            : "",
+          pageNumber: item.PageNumber || "",
+          revision: item.Revision || "",
+          comment: item.Comment || "",
+          isDeleted: item.IsDeleted === true || item.IsDeleted === "Yes",
+        }));
+
+        // Filter out deleted comments
+        const activeComments = comments.filter((comment) => !comment.isDeleted);
+        setAllDocumentComments(activeComments);
+
+        // Filter active comments by revision
+        const filteredComments = activeComments.filter(
+          (comment) => comment.revision === revision,
+        );
+        setDocumentComments(filteredComments);
+
+        // Get unique versions from active comments only
+        const uniqueVersions = [
+          ...new Set(activeComments.map((comment) => comment.revision)),
+        ].sort();
+        setVersionList(uniqueVersions);
+        setSelectedVersion(revision);
+        setShowDocumentComments(true);
+      } else {
+        setShowDocumentComments(false);
+        setDocumentComments([]);
+        setAllDocumentComments([]);
+        setVersionList([]);
+      }
+    } catch (error) {
+      console.error("Error fetching document comments:", error);
+      await ErrorLogger.logError(
+        sp,
+        error,
+        "getDocumentComments",
+        "MyApprovalWebPart",
       );
-      setDocumentComments(filteredComments);
-     
-      // Get unique versions from active comments only
-      const uniqueVersions = [
-        ...new Set(activeComments.map((comment) => comment.revision)),
-      ].sort();
-      setVersionList(uniqueVersions);
-      setSelectedVersion(revision);
-      setShowDocumentComments(true);
-    } else {
       setShowDocumentComments(false);
-      setDocumentComments([]);
-      setAllDocumentComments([]);
-      setVersionList([]);
     }
-  } catch (error) {
-    console.error("Error fetching document comments:", error);
-    await ErrorLogger.logError(
-      sp,
-      error,
-      "getDocumentComments",
-      "MyApprovalWebPart",
-    );
-    setShowDocumentComments(false);
-  }
-};
+  };
 
   const onVersionChange = (version: string) => {
     setSelectedVersion(version);
@@ -3980,6 +3990,70 @@ const MyApprovalContext = ({ props }: any) => {
     window.open(url, "_blank");
   };
 
+  const fetchOutgoingStatusOptions = async () => {
+    try {
+      const items = await sp.web.lists
+        .getByTitle("OutgoingStatusMasterList")
+        .items.select("OutGoingStatus", "IsActive")
+        .filter("IsActive eq 'Yes'")();
+      const options = items.map((item: any) => ({
+        value: item.OutGoingStatus,
+        label: item.OutGoingStatus,
+      }));
+      setOutgoingStatusOptions(options);
+    } catch (error) {
+      console.error("Error fetching outgoing status options:", error);
+      await ErrorLogger.logError(
+        sp,
+        error,
+        "fetchOutgoingStatusOptions",
+        "MyApprovalWebPart",
+      );
+    }
+  };
+  const fetchCodeStatusOptions = async () => {
+    try {
+      const items = await sp.web.lists
+        .getByTitle("PublishCodeMaster")
+        .items.select("PublishCode", "IsActive")
+        .filter("IsActive eq 'Yes'")();
+      const options = items.map((item: any) => ({
+        value: item.PublishCode,
+        label: item.PublishCode,
+      }));
+      setCodeStatusOptions(options);
+    } catch (error) {
+      console.error("Error fetching code status options:", error);
+      await ErrorLogger.logError(
+        sp,
+        error,
+        "fetchCodeStatusOptions",
+        "MyApprovalWebPart",
+      );
+    }
+  };
+  const fetchMdrOptions = async () => {
+    try {
+      const items = await sp.web.lists
+        .getByTitle("OutgoingStatusMasterList")
+        .items.select("OutGoingStatus", "IsActive")
+        .filter("IsActive eq 'Yes'")();
+      const options = items.map((item: any) => ({
+        value: item.OutGoingStatus,
+        label: item.OutGoingStatus,
+      }));
+      setMdrOptions(options);
+    } catch (error) {
+      console.error("Error fetching MDR options:", error);
+      await ErrorLogger.logError(
+        sp,
+        error,
+        "fetchMdrOptions",
+        "MyApprovalWebPart",
+      );
+    }
+  };
+
   return (
     <div id="wrapper" ref={elementRef}>
       {/* 🔄 SUBMIT TASK LOADER */}
@@ -4218,9 +4292,14 @@ const MyApprovalContext = ({ props }: any) => {
                                 }
                               >
                                 <option value="">Select MDR</option>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
+                                {mdrOptions.map((option) => (
+                                  <option
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </option>
+                                ))}
                               </select>
                             </li>
                             <li className="nav-item" role="presentation">
@@ -7056,9 +7135,16 @@ const MyApprovalContext = ({ props }: any) => {
                                                   >
                                                     Select
                                                   </option>
-                                                  <option value="A">A</option>
-                                                  <option value="B">B</option>
-                                                  <option value="C">C</option>
+                                                  {outgoingStatusOptions.map(
+                                                    (option) => (
+                                                      <option
+                                                        key={option.value}
+                                                        value={option.value}
+                                                      >
+                                                        {option.label}
+                                                      </option>
+                                                    ),
+                                                  )}
                                                 </select>
                                               </div>
                                             </>
@@ -7126,9 +7212,16 @@ const MyApprovalContext = ({ props }: any) => {
                                                   >
                                                     Select
                                                   </option>
-                                                  <option value="A">A</option>
-                                                  <option value="B">B</option>
-                                                  <option value="C">C</option>
+                                                  {codeStatusOptions.map(
+                                                    (option) => (
+                                                      <option
+                                                        key={option.value}
+                                                        value={option.value}
+                                                      >
+                                                        {option.label}
+                                                      </option>
+                                                    ),
+                                                  )}
                                                 </select>
                                               </div>
                                             </>

@@ -545,7 +545,7 @@ const DMSFolderApproval = ({props}:any) => {
                 } catch (error) {
                   console.log("Error in deleting the folders details and folders",error);
                 }
-                Swal.fire('Rejected','Folder Rejected successfully','success').then((result)=>{
+                Swal.fire('Rejected successfully','success').then((result)=>{
                   if(result.isConfirmed){
                     window.location.reload();
                   }

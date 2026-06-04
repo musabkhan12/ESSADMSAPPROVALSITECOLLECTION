@@ -735,7 +735,7 @@ const handleToggleClick = (event: any) => {
     if(buttonText === "Approve"){
       try {
         const userConfirmed = await Swal.fire({
-          title: 'Do you want to approve this File Request?',
+          title: 'Do you want to approve this Request?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -1079,7 +1079,7 @@ const handleToggleClick = (event: any) => {
         }
 
         Swal.fire({
-          title: 'File Approved Successfully',
+          title: 'Approved Successfully',
           icon: 'success',
           confirmButtonColor: '#4dc6c0',
           confirmButtonText: 'OK',
@@ -1105,7 +1105,7 @@ const handleToggleClick = (event: any) => {
       setFinalStatus = 'Rejected'
       try{
         const userConfirmed = await Swal.fire({
-          title: "Do you want to Reject this File Request?",
+          title: "Do you want to Reject this Request?",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -1177,7 +1177,7 @@ const handleToggleClick = (event: any) => {
    
 
         Swal.fire({
-          title: 'File Rejected Successfully',
+          title: 'Rejected Successfully',
           icon: 'success',
           confirmButtonColor: '#4dc6c0',
           confirmButtonText: 'OK',
@@ -1201,7 +1201,7 @@ const handleToggleClick = (event: any) => {
       // getApprovalmasterTasklist();
       // getCurrrentuser()
       Swal.fire({
-        title: 'File Rejected Successfully',
+        title: 'Rejected Successfully',
         icon: 'success',
         confirmButtonColor: '#4dc6c0',
         confirmButtonText: 'OK',
@@ -1216,7 +1216,7 @@ const handleToggleClick = (event: any) => {
     else if(buttonText === "Rework"){
       try {
         const userConfirmed = await Swal.fire({
-          title: "Do you want to Rework this File Request?",
+          title: "Do you want to Rework this Request?",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -1239,7 +1239,7 @@ const handleToggleClick = (event: any) => {
         // setToggleLog((prevData)=>!prevData);
         // getApprovalmasterTasklist();
         Swal.fire({
-          title: 'File Rework Successfully',
+          title: 'Rework Successfully',
           icon: 'success',
           confirmButtonColor: '#4dc6c0',
           confirmButtonText: 'OK',

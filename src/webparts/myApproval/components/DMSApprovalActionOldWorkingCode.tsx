@@ -1455,7 +1455,7 @@ if (container) {
       try{
         const userConfirmed = await Swal.fire({
           title: 'Are you sure?',
-          text: "Do you want to Reject this File Request?",
+          text: "Do you want to Reject this Request?",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -1558,7 +1558,7 @@ if (container) {
     getApprovalmasterTasklist();
 
     Swal.fire({
-      title: 'File Rejected Successfully',
+      title: 'Rejected Successfully',
       icon: 'success',
       confirmButtonColor: '#4dc6c0',
       confirmButtonText: 'OK',
@@ -1582,7 +1582,7 @@ if (container) {
       getApprovalmasterTasklist();
       getCurrrentuser()
       Swal.fire({
-        title: 'File Rejected Successfully',
+        title: 'Rejected Successfully',
         icon: 'success',
         confirmButtonColor: '#4dc6c0',
         confirmButtonText: 'OK',
@@ -1621,7 +1621,7 @@ if (container) {
         setToggleLog((prevData)=>!prevData);
         getApprovalmasterTasklist();
         Swal.fire({
-          title: 'File Rework Successfully',
+          title: 'Rework Successfully',
           icon: 'success',
           confirmButtonColor: '#4dc6c0',
           confirmButtonText: 'OK',

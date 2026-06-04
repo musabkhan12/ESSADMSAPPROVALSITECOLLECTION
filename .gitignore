@@ -64,5 +64,5 @@ obj
 
 # Styles Generated Code
 
-*.scss.ts
+# *.scss.ts
 
